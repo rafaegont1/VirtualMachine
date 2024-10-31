@@ -21,6 +21,7 @@ private:
     void write_back();
 
     int32_t alu(int32_t opnd1, int32_t opnd2, char op);
+    bool stall_on_branch();
     void update();
     void print_pipeline();
     bool finished();

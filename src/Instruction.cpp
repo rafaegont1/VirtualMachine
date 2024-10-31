@@ -63,3 +63,9 @@ Instruction::get_instructions(const std::string& file_name)
     file.close();
     return code;
 }
+
+bool Instruction::is_branch(Instruction::Opcode opcode)
+{
+    return (opcode == BEQ || opcode == BNE || opcode == BGEZ
+        || opcode == BGTZ || opcode == BLEZ || opcode == BLTZ);
+}

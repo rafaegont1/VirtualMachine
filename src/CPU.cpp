@@ -34,10 +34,22 @@ void CPU::run(Process& proc)
     proc.write_regs(rf.get_regs_data());
 }
 
+bool CPU::stall_on_branch()
+{
+    Instruction::Opcode id_opcode = Instruction::get_opcode((*instr_id)[0]);
+    Instruction::Opcode ex_opcode = Instruction::get_opcode((*instr_ex)[0]);
+
+    return Instruction::is_branch(id_opcode)
+        || Instruction::is_branch(ex_opcode);
+}
+
 void CPU::instr_fetch(Process& process)
 {
-    instr_if = (process.pc < process.code.size())
-        ? &process.code[process.pc++] : &NOP_INSTR;
+    if (process.pc < process.code.size() && !stall_on_branch()) {
+        instr_if = &process.code[process.pc++];
+    } else {
+        instr_if = &NOP_INSTR;
+    }
 }
 
 void CPU::instr_decode()

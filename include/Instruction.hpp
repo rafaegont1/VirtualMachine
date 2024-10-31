@@ -28,6 +28,7 @@ namespace Instruction {
 
     Opcode get_opcode(const std::string& opcode_name);
     std::vector<std::vector<std::string>> get_instructions(const std::string& file_name);
+    bool is_branch(Instruction::Opcode opcode);
 };
 
 #endif // INSTRUCTION_HPP
