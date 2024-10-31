@@ -1,0 +1,4 @@
+add      $t0    $t1 $t2
+store    A      $t2
+nop
+load     $t0    A
