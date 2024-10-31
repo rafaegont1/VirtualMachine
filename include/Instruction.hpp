@@ -5,31 +5,29 @@
 #include <string>
 #include <vector>
 
-struct Instruction {
+namespace Instruction {
     enum Opcode : uint8_t {
-        NOP = 0x00,
-        ADD,
-        SUB,
-        MULT,
-        DIV,
-        LI,
-        JUMP,
-        BEQ,
-        BNE,
-        BGEZ,
-        BGTZ,
-        BLEZ,
-        BLTZ,
-        LOAD,
-        STORE
+        NOP = 0x00, // no operation
+        ADD,        // add
+        SUB,        // subtract
+        MULT,       // multiply
+        DIV,        // divide
+        LI,         // load immeadiate
+        INC,        // increment
+        DEC,        // decrement
+        JUMP,       // jump
+        BEQ,        // branch on equal
+        BNE,        // branch on not equal
+        BGEZ,       // branch on greatear or equal to zero
+        BGTZ,       // branch on greatear than zero
+        BLEZ,       // branch on lesser or equal to zero
+        BLTZ,       // branch on lesser than zero
+        LOAD,       // load variable from memory
+        STORE       // store variable in memory
     };
 
-    Opcode opcode;
-    std::vector<uint32_t> args;
-    std::string variable;
-
-    static Opcode get_opcode(const std::string& opcode_name);
-    static std::vector<std::vector<std::string>> get_instructions(const std::string& file_name);
+    Opcode get_opcode(const std::string& opcode_name);
+    std::vector<std::vector<std::string>> get_instructions(const std::string& file_name);
 };
 
 #endif // INSTRUCTION_HPP

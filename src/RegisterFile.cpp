@@ -6,7 +6,7 @@
 
 RegisterFile::RegisterFile() {}
 
-void RegisterFile::set_data(RegEnum reg_num, uint32_t data)
+void RegisterFile::set_data(RegEnum reg_num, int32_t data)
 {
     r[reg_num].data = data;
     r[reg_num].modified = true;
@@ -57,7 +57,7 @@ RegisterFile::RegEnum RegisterFile::get_enum(const std::string& regName)
     return it->second;
 }
 
-uint32_t RegisterFile::get_data(uint8_t regNum) const
+int32_t RegisterFile::get_data(uint8_t regNum) const
 {
     if (regNum >= NUM_REGISTERS) {
         throw std::runtime_error("Error: Register number '"
@@ -82,7 +82,7 @@ const RegisterFile::Register* RegisterFile::get_regs_data()
 void RegisterFile::print()
 {
     std::cout
-        << '\n'
+        << "\nGENERAL-PURPOSE REGISTERS\n"
         << "$zero: " << r[ZERO].data << '\t'
         << "$at: "   << r[AT].data   << '\t'
         << "$v0: "   << r[V0].data   << '\t'

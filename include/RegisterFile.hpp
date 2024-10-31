@@ -54,8 +54,8 @@ public:
 
     static RegEnum get_enum(const std::string& regName);
 
-    void set_data(RegEnum reg_num, uint32_t data);
-    uint32_t get_data(uint8_t regNum) const;
+    void set_data(RegEnum reg_num, int32_t data);
+    int32_t get_data(uint8_t regNum) const;
     void update_regs(const int32_t* r);
     const Register* get_regs_data();
     void print();

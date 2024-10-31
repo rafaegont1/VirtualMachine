@@ -13,21 +13,24 @@ void CPU::run(Process& proc)
     rf.update_regs(proc.read_regs());
 
     do {
+        std::cout << "CLOCK: " << ++clk << std::endl;
+
         instr_fetch(proc);
         instr_decode();
         execute(proc);
         mem_access();
         write_back();
 
-        std::cout << "Clock: " << ++clk << "\n";
         rf.print();
         print_pipeline();
+        mem->print_data();
         std::cout <<
             "==============================================================\n";
+
         update();
+
     } while (!finished());
 
-    mem->print_data();
     proc.write_regs(rf.get_regs_data());
 }
 
@@ -59,6 +62,11 @@ void CPU::instr_decode()
             this->id_imm = std::stoi((*instr_id)[2]);
             break;
 
+        case Instruction::Opcode::INC:
+        case Instruction::Opcode::DEC:
+            this->id_rd = RegisterFile::get_enum((*instr_id)[1]);
+            break;
+
         case Instruction::Opcode::JUMP:
             this->id_imm = std::stoi((*instr_id)[1]);
             break;
@@ -86,20 +94,6 @@ void CPU::instr_decode()
             this->id_rs = RegisterFile::get_enum((*instr_id)[2]);
             break;
     }
-}
-
-int32_t CPU::alu(int32_t opnd1, int32_t opnd2, char op)
-{
-    int32_t res;
-
-    switch (op) {
-        case '+': res = opnd1 + opnd2; break;
-        case '-': res = opnd1 - opnd2; break;
-        case '*': res = opnd1 * opnd2; break;
-        case '/': res = opnd1 / opnd2; break;
-    }
-
-    return res;
 }
 
 void CPU::execute(Process &process)
@@ -135,6 +129,14 @@ void CPU::execute(Process &process)
             rf.set_data(ex_rd, ex_imm);
             break;
 
+        case Instruction::Opcode::INC:
+            rf.set_data(ex_rd, rf.get_data(ex_rd) + 1);
+            break;
+
+        case Instruction::Opcode::DEC:
+            rf.set_data(ex_rd, rf.get_data(ex_rd) - 1);
+            break;
+
         case Instruction::Opcode::JUMP:
             process.pc = this->ex_imm - 1;
             break;
@@ -152,25 +154,25 @@ void CPU::execute(Process &process)
             break;
 
         case Instruction::Opcode::BGEZ:
-            if (rf.get_data(ex_rs) >= rf.get_data(ex_rt)) {
+            if (rf.get_data(ex_rs) >= 0) {
                 process.pc = this->ex_imm - 1;
             }
             break;
 
         case Instruction::Opcode::BGTZ:
-            if (rf.get_data(ex_rs) > rf.get_data(ex_rt)) {
+            if (rf.get_data(ex_rs) > 0) {
                 process.pc = this->ex_imm - 1;
             }
             break;
 
         case Instruction::Opcode::BLEZ:
-            if (rf.get_data(ex_rs) <= rf.get_data(ex_rt)) {
+            if (rf.get_data(ex_rs) <= 0) {
                 process.pc = this->ex_imm - 1;
             }
             break;
 
         case Instruction::Opcode::BLTZ:
-            if (rf.get_data(ex_rs) < rf.get_data(ex_rt)) {
+            if (rf.get_data(ex_rs) < 0) {
                 process.pc = this->ex_imm - 1;
             }
             break;
@@ -201,6 +203,20 @@ void CPU::write_back()
         std::string var = (*instr_wb)[1];
         mem->write_data(var, rf.get_data(id_rs));
     }
+}
+
+int32_t CPU::alu(int32_t opnd1, int32_t opnd2, char op)
+{
+    int32_t res;
+
+    switch (op) {
+        case '+': res = opnd1 + opnd2; break;
+        case '-': res = opnd1 - opnd2; break;
+        case '*': res = opnd1 * opnd2; break;
+        case '/': res = opnd1 / opnd2; break;
+    }
+
+    return res;
 }
 
 void CPU::update()

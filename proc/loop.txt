@@ -1,0 +1,3 @@
+li   $t0 10
+dec  $t0
+bgtz $t0 2

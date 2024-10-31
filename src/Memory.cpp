@@ -36,7 +36,14 @@ uint32_t Memory::read_data(const std::string& var)
 
 void Memory::print_data()
 {
+    std::cout << "\nMEMORY DATA\n";
+
+    if (data.empty()) {
+        std::cout << "empty\n";
+        return;
+    }
+
     for (const auto& d : data) {
-        std::cout << d.first << " = " << d.second << std::endl;
+        std::cout << d.first << ": " << d.second << '\n';
     }
 }
