@@ -73,7 +73,7 @@ empty
 
 A máquina virtual disponibilizada possui um arquivo CMake que realiza todo o procedimento de compilação e execução. Para tanto, temos as seguintes diretrizes de execução:
 
-> [!NOTE]
+> [!IMPORTANT]
 > Os programas estão salvos na pasta proc, e devem ser utilizadas como argumento do executável da máquina virtual
 
 | Comando                    | Função                                                                                           |
