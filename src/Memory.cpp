@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-Memory::Memory() {}
+Memory::Memory(std::ofstream *log) : log(log) {}
 
 Memory::~Memory() {}
 
@@ -11,7 +11,7 @@ void Memory::new_process(Process proc)
     proc_queue.push(proc);
 }
 
-Process Memory::get_next_process()
+Process Memory::get_next_proc()
 {
     Process next_process = this->proc_queue.front();
 
@@ -20,12 +20,12 @@ Process Memory::get_next_process()
     return next_process;
 }
 
-void Memory::write_data(const std::string& var, uint32_t d)
+void Memory::write_data(const std::string& var, int32_t d)
 {
     data[var] = d;
 }
 
-uint32_t Memory::read_data(const std::string& var)
+int32_t Memory::read_data(const std::string& var)
 {
     if (data.find(var) == data.end()) {
         throw std::runtime_error("Error: Variable '" + var + "' not found.");
@@ -36,14 +36,14 @@ uint32_t Memory::read_data(const std::string& var)
 
 void Memory::print_data()
 {
-    std::cout << "\nMEMORY DATA\n";
+    *log << "\nMEMORY DATA\n";
 
     if (data.empty()) {
-        std::cout << "empty\n";
+        *log << "empty\n";
         return;
     }
 
     for (const auto& d : data) {
-        std::cout << d.first << ": " << d.second << '\n';
+        *log << d.first << ": " << d.second << '\n';
     }
 }

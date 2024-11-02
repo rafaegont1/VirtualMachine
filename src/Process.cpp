@@ -1,24 +1,26 @@
 #include "Process.hpp"
+#include "Instruction.hpp"
 #include "RegisterFile.hpp"
 
 uint32_t Process::count = 0;
 
-Process::Process()
+Process::Process(const std::string& code_file)
 {
     pid = ++count;
 
-    r[RegisterFile::ZERO] = 0;
+    code = Instruction::load_program(code_file);
 
+    r[RegisterFile::ZERO] = 0;
     for (int n = 1; n < RegisterFile::NUM_REGISTERS; n++) {
         r[n] = n + 100;
     }
 }
 
-Process::~Process() {}
+// Process::~Process() {}
 
-void Process::set_code(const std::vector<std::vector<std::string>>& code) {
-    this->code = code;
-}
+// void Process::set_code(const std::vector<std::vector<std::string>>& code) {
+//     this->code = code;
+// }
 
 void Process::write_regs(const RegisterFile::Register* r)
 {

@@ -1,6 +1,7 @@
 #ifndef REGISTER_FILE
 #define REGISTER_FILE
 
+#include <fstream>
 #include <string>
 #include <array>
 #include <cstdint>
@@ -49,7 +50,7 @@ public:
         bool modified = false;
     };
 
-    RegisterFile();
+    RegisterFile(std::ofstream *log);
     virtual ~RegisterFile() = default;
 
     static RegEnum get_enum(const std::string& regName);
@@ -62,6 +63,8 @@ public:
 
 private:
     std::array<Register, NUM_REGISTERS> r;
+
+    std::ofstream *log;
 };
 
 #endif // REGISTER_FILE

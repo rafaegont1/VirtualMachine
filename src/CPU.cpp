@@ -6,32 +6,33 @@
 
 const std::vector<std::string> CPU::NOP_INSTR = {"nop"};
 
-CPU::CPU(Memory *mem) : mem(mem) {}
+CPU::CPU(std::ofstream *log, Memory *mem) :
+    rf(log), mem(mem), log(log) {}
 
-void CPU::run(Process& proc)
+void CPU::run(Process& p)
 {
-    rf.update_regs(proc.read_regs());
+    rf.update_regs(p.read_regs());
 
     do {
-        std::cout << "CLOCK: " << ++clk << std::endl;
+        *log << "CLOCK: " << ++clk << '\n';
 
-        instr_fetch(proc);
+        instr_fetch(p);
         instr_decode();
-        execute(proc);
+        execute(p);
         mem_access();
         write_back();
 
         rf.print();
         print_pipeline();
         mem->print_data();
-        std::cout <<
+        *log <<
             "==============================================================\n";
 
         update();
 
     } while (!finished());
 
-    proc.write_regs(rf.get_regs_data());
+    p.write_regs(rf.get_regs_data());
 }
 
 bool CPU::stall_on_branch()
@@ -43,10 +44,10 @@ bool CPU::stall_on_branch()
         || Instruction::is_branch(ex_opcode);
 }
 
-void CPU::instr_fetch(Process& process)
+void CPU::instr_fetch(Process& p)
 {
-    if (process.pc < process.code.size() && !stall_on_branch()) {
-        instr_if = &process.code[process.pc++];
+    if (p.pc < p.code.size() && !stall_on_branch()) {
+        instr_if = &p.code[p.pc++];
     } else {
         instr_if = &NOP_INSTR;
     }
@@ -108,7 +109,7 @@ void CPU::instr_decode()
     }
 }
 
-void CPU::execute(Process &process)
+void CPU::execute(Process &p)
 {
     Instruction::Opcode opcode = Instruction::get_opcode((*instr_ex)[0]);
     int32_t alu_res;
@@ -150,42 +151,42 @@ void CPU::execute(Process &process)
             break;
 
         case Instruction::Opcode::JUMP:
-            process.pc = this->ex_imm - 1;
+            p.pc = this->ex_imm - 1;
             break;
 
         case Instruction::Opcode::BEQ:
             if (rf.get_data(ex_rs) == rf.get_data(ex_rt)) {
-                process.pc = this->ex_imm - 1;
+                p.pc = this->ex_imm - 1;
             }
             break;
 
         case Instruction::Opcode::BNE:
             if (rf.get_data(ex_rs) != rf.get_data(ex_rt)) {
-                process.pc = this->ex_imm - 1;
+                p.pc = this->ex_imm - 1;
             }
             break;
 
         case Instruction::Opcode::BGEZ:
             if (rf.get_data(ex_rs) >= 0) {
-                process.pc = this->ex_imm - 1;
+                p.pc = this->ex_imm - 1;
             }
             break;
 
         case Instruction::Opcode::BGTZ:
             if (rf.get_data(ex_rs) > 0) {
-                process.pc = this->ex_imm - 1;
+                p.pc = this->ex_imm - 1;
             }
             break;
 
         case Instruction::Opcode::BLEZ:
             if (rf.get_data(ex_rs) <= 0) {
-                process.pc = this->ex_imm - 1;
+                p.pc = this->ex_imm - 1;
             }
             break;
 
         case Instruction::Opcode::BLTZ:
             if (rf.get_data(ex_rs) < 0) {
-                process.pc = this->ex_imm - 1;
+                p.pc = this->ex_imm - 1;
             }
             break;
 
@@ -247,36 +248,36 @@ void CPU::update()
 
 void CPU::print_pipeline()
 {
-    std::cout << "PIPELINE\n";
-    std::cout << "IF:";
+    *log << "PIPELINE\n";
+    *log << "IF:";
     for (const auto& word : *instr_if) {
-        std::cout << '\t' << word;
+        *log << '\t' << word;
     }
-    std::cout << "\n";
+    *log << "\n";
 
-    std::cout << "ID:";
+    *log << "ID:";
     for (const auto& word : *instr_id) {
-        std::cout << '\t' << word;
+        *log << '\t' << word;
     }
-    std::cout << "\n";
+    *log << "\n";
 
-    std::cout << "EX:";
+    *log << "EX:";
     for (const auto& word : *instr_ex) {
-        std::cout << '\t' << word;
+        *log << '\t' << word;
     }
-    std::cout << "\n";
+    *log << "\n";
 
-    std::cout << "MEM:";
+    *log << "MEM:";
     for (const auto& word : *instr_mem) {
-        std::cout << '\t' << word;
+        *log << '\t' << word;
     }
-    std::cout << "\n";
+    *log << "\n";
 
-    std::cout << "WB:";
+    *log << "WB:";
     for (const auto& word : *instr_wb) {
-        std::cout << '\t' << word;
+        *log << '\t' << word;
     }
-    std::cout << "\n";
+    *log << "\n";
 }
 
 bool CPU::finished()

@@ -10,10 +10,10 @@
 class Process
 {
 public:
-    Process();
-    virtual ~Process();
+    Process(const std::string& code_file);
+    virtual ~Process() = default;
 
-    void set_code(const std::vector<std::vector<std::string>>& code);
+    // void set_code(const std::vector<std::vector<std::string>>& code);
     void write_regs(const RegisterFile::Register* r);
     const int32_t* read_regs();
 

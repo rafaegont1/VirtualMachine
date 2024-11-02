@@ -2,21 +2,22 @@
 #define PIPELINE_HPP
 
 #include <cstdint>
+#include <fstream>
 #include "Memory.hpp"
 #include "Process.hpp"
 
 class CPU
 {
 public:
-    CPU(Memory *mem);
+    CPU(std::ofstream *log, Memory *mem);
     virtual ~CPU() = default;
 
-    void run(Process& proc);
+    void run(Process& p);
 
 private:
-    void instr_fetch(Process& process);
+    void instr_fetch(Process& p);
     void instr_decode();
-    void execute(Process &process);
+    void execute(Process &p);
     void mem_access();
     void write_back();
 
@@ -41,7 +42,9 @@ private:
     const std::vector<std::string> *instr_wb  = &NOP_INSTR;
 
     RegisterFile::RegEnum id_rd, id_rs, id_rt, ex_rd, ex_rs, ex_rt;
-    uint32_t id_imm, ex_imm;
+    int32_t id_imm, ex_imm;
+
+    std::ofstream *log;
 };
 
 #endif // PIPELINE_HPP

@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <stdexcept>
 
-RegisterFile::RegisterFile() {}
+RegisterFile::RegisterFile(std::ofstream *log) : log(log) {}
 
 void RegisterFile::set_data(RegEnum reg_num, int32_t data)
 {
@@ -81,39 +81,38 @@ const RegisterFile::Register* RegisterFile::get_regs_data()
 
 void RegisterFile::print()
 {
-    std::cout
-        << "\nGENERAL-PURPOSE REGISTERS\n"
-        << "$zero: " << r[ZERO].data << '\t'
-        << "$at: "   << r[AT].data   << '\t'
-        << "$v0: "   << r[V0].data   << '\t'
-        << "$v1: "   << r[V1].data   << '\n'
-        << "$a0: "   << r[A0].data   << '\t'
-        << "$a1: "   << r[A1].data   << '\t'
-        << "$a2: "   << r[A2].data   << '\t'
-        << "$a3: "   << r[A3].data   << '\n'
-        << "$t0: "   << r[T0].data   << '\t'
-        << "$t1: "   << r[T1].data   << '\t'
-        << "$t2: "   << r[T2].data   << '\t'
-        << "$t3: "   << r[T3].data   << '\n'
-        << "$t4: "   << r[T4].data   << '\t'
-        << "$t5: "   << r[T5].data   << '\t'
-        << "$t6: "   << r[T6].data   << '\t'
-        << "$t7: "   << r[T7].data   << '\n'
-        << "$s0: "   << r[S0].data   << '\t'
-        << "$s1: "   << r[S1].data   << '\t'
-        << "$s2: "   << r[S2].data   << '\t'
-        << "$s3: "   << r[S3].data   << '\n'
-        << "$s4: "   << r[S4].data   << '\t'
-        << "$s5: "   << r[S5].data   << '\t'
-        << "$s6: "   << r[S6].data   << '\t'
-        << "$s7: "   << r[S7].data   << '\n'
-        << "$t8: "   << r[T8].data   << '\t'
-        << "$t9: "   << r[T9].data   << '\t'
-        << "$k0: "   << r[K0].data   << '\t'
-        << "$k1: "   << r[K1].data   << '\n'
-        << "$gp: "   << r[GP].data   << '\t'
-        << "$sp: "   << r[SP].data   << '\t'
-        << "$fp: "   << r[FP].data   << '\t'
-        << "$ra: "   << r[RA].data   << '\n'
-        << std::endl;
+    *log << "\nGENERAL-PURPOSE REGISTERS\n"
+         << "$zero: " << r[ZERO].data << '\t'
+         << "$at: "   << r[AT].data   << '\t'
+         << "$v0: "   << r[V0].data   << '\t'
+         << "$v1: "   << r[V1].data   << '\n'
+         << "$a0: "   << r[A0].data   << '\t'
+         << "$a1: "   << r[A1].data   << '\t'
+         << "$a2: "   << r[A2].data   << '\t'
+         << "$a3: "   << r[A3].data   << '\n'
+         << "$t0: "   << r[T0].data   << '\t'
+         << "$t1: "   << r[T1].data   << '\t'
+         << "$t2: "   << r[T2].data   << '\t'
+         << "$t3: "   << r[T3].data   << '\n'
+         << "$t4: "   << r[T4].data   << '\t'
+         << "$t5: "   << r[T5].data   << '\t'
+         << "$t6: "   << r[T6].data   << '\t'
+         << "$t7: "   << r[T7].data   << '\n'
+         << "$s0: "   << r[S0].data   << '\t'
+         << "$s1: "   << r[S1].data   << '\t'
+         << "$s2: "   << r[S2].data   << '\t'
+         << "$s3: "   << r[S3].data   << '\n'
+         << "$s4: "   << r[S4].data   << '\t'
+         << "$s5: "   << r[S5].data   << '\t'
+         << "$s6: "   << r[S6].data   << '\t'
+         << "$s7: "   << r[S7].data   << '\n'
+         << "$t8: "   << r[T8].data   << '\t'
+         << "$t9: "   << r[T9].data   << '\t'
+         << "$k0: "   << r[K0].data   << '\t'
+         << "$k1: "   << r[K1].data   << '\n'
+         << "$gp: "   << r[GP].data   << '\t'
+         << "$sp: "   << r[SP].data   << '\t'
+         << "$fp: "   << r[FP].data   << '\t'
+         << "$ra: "   << r[RA].data   << '\n'
+         << std::endl;
 }

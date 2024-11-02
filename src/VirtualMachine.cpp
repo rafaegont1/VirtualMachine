@@ -1,20 +1,27 @@
 #include "VirtualMachine.hpp"
+
+#include <iostream>
 #include "Instruction.hpp"
 
-VirtualMachine::VirtualMachine() : cpu(&mem) {}
+VirtualMachine::VirtualMachine(const std::string& log_file) :
+    log(log_file), cpu(&log, &mem), mem(&log)
+{
+    std::cout << "O log da execução será gravado em '"
+        << log_file << "'" << std::endl;
+}
+
+VirtualMachine::~VirtualMachine()
+{
+    log.close();
+}
 
 void VirtualMachine::create_proc(const std::string& code_file)
 {
-    std::vector<std::vector<std::string>> code;
-    Process new_proc;
-
-    code = Instruction::get_instructions(code_file);
-    new_proc.set_code(code);
-    mem.new_process(new_proc);
+    mem.new_process(Process(code_file));
 }
 
 void VirtualMachine::run()
 {
-    proc.push_back(mem.get_next_process());
+    proc.push_back(mem.get_next_proc());
     cpu.run(proc.back());
 }

@@ -38,7 +38,7 @@ Instruction::Opcode Instruction::get_opcode(const std::string& opcode_name)
 }
 
 std::vector<std::vector<std::string>>
-Instruction::get_instructions(const std::string& file_name)
+Instruction::load_program(const std::string& file_name)
 {
     std::vector<std::vector<std::string>> code;
     std::ifstream file(file_name);
