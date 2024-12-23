@@ -1,3 +1,4 @@
 li   $t3 10
 dec  $t3
 bgtz $t3 2
+halt

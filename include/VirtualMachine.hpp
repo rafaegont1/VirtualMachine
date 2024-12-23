@@ -1,25 +1,28 @@
-#ifndef VIRTUAL_MACHINE
-#define VIRTUAL_MACHINE
+#ifndef VIRTUAL_MACHINE_HPP
+#define VIRTUAL_MACHINE_HPP
 
+#include <array>
 #include <vector>
 #include <fstream>
-#include "CPU.hpp"
+#include "CPU/Core.hpp"
 
-class VirtualMachine
-{
+class VirtualMachine {
 public:
-    VirtualMachine(const std::string& log_file);
+    static const uint8_t NUM_CORES = 1;
+
+    VirtualMachine();
     virtual ~VirtualMachine();
 
-    void create_proc(const std::string& code_file);
+    void create_process(const std::string & file_name);
     void run();
 
 private:
-    std::ofstream log;
+    inline Process::Time generate_random_quantum(uint8_t min, uint8_t max);
 
-    CPU cpu;
-    Memory mem;
-    std::vector<Process> proc; // running processes
+    RAM mem;
+    std::array<CPU::Core, NUM_CORES> cpu;
+
+    std::ofstream log;
 };
 
-#endif // VIRTUAL_MACHINE
+#endif // VIRTUAL_MACHINE_HPP

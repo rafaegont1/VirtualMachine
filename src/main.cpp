@@ -1,16 +1,19 @@
 #include <iostream>
 #include "VirtualMachine.hpp"
 
-int main(int argc, char* argv[])
+int main(int argc, char ** argv)
 {
     if (argc < 2) {
-        std::cerr << "Uso: " << argv[0] << " <nome_do_programa>" << std::endl;
-        return 1;
+        std::cerr << "Uso: " << argv[0] << " <program_name>" << std::endl;
+        exit(EXIT_FAILURE);
     }
 
-    VirtualMachine vm("log.txt");
+    VirtualMachine vm;
 
-    vm.create_proc(argv[1]);
+    for (int i = 1; i < argc; i++) {
+        vm.create_process(argv[i]);
+    }
+
     vm.run();
 
     return 0;

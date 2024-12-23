@@ -1,13 +1,18 @@
 #include "VirtualMachine.hpp"
 
 #include <iostream>
-#include "Instruction.hpp"
+#include <thread>
+#include <random>
+#include "CPU/Instruction.hpp"
 
-VirtualMachine::VirtualMachine(const std::string& log_file) :
-    log(log_file), cpu(&log, &mem), mem(&log)
+VirtualMachine::VirtualMachine() :
+    cpu {
+        CPU::Core(mem, "cpu1_log.txt"),
+        CPU::Core(mem, "cpu2_log.txt"),
+        CPU::Core(mem, "cpu2_log.txt"),
+        CPU::Core(mem, "cpu2_log.txt")
+    }
 {
-    std::cout << "O log da execução será gravado em '"
-        << log_file << "'" << std::endl;
 }
 
 VirtualMachine::~VirtualMachine()
@@ -15,13 +20,25 @@ VirtualMachine::~VirtualMachine()
     log.close();
 }
 
-void VirtualMachine::create_proc(const std::string& code_file)
+void VirtualMachine::create_process(const std::string & file_name)
 {
-    mem.new_process(Process(code_file));
+    Process::Time quantum = generate_random_quantum(10, 30);
+
+    mem.create_process(file_name, quantum);
 }
 
 void VirtualMachine::run()
 {
-    proc.push_back(mem.get_next_proc());
-    cpu.run(proc.back());
+    for (auto & core : cpu) {
+        core.run();
+    }
+}
+
+inline Process::Time VirtualMachine::generate_random_quantum(uint8_t min, uint8_t max)
+{
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> distrib(min, max);
+
+    return Process::Time(distrib(gen));
 }

@@ -1,14 +1,16 @@
-#ifndef REGISTER_FILE
-#define REGISTER_FILE
+#ifndef REGISTER_FILE_HPP
+#define REGISTER_FILE_HPP
 
 #include <fstream>
 #include <string>
 #include <array>
 #include <cstdint>
 
-class RegisterFile {
+namespace CPU {
+
+class RegFile {
 public:
-    enum RegEnum : uint8_t {
+    enum RegNum : uint8_t {
         ZERO = 0, // $zero
         AT,       // $at
         V0,       // $v0
@@ -45,26 +47,25 @@ public:
 
     static const uint8_t NUM_REGISTERS = 32;
 
-    struct Register {
-        int32_t data;
-        bool modified = false;
-    };
+    using Registers = std::array<int32_t, RegFile::NUM_REGISTERS>;
 
-    RegisterFile(std::ofstream *log);
-    virtual ~RegisterFile() = default;
+    RegFile();
+    virtual ~RegFile() = default;
 
-    static RegEnum get_enum(const std::string& regName);
+    static RegNum get_reg_num(const std::string & reg_name);
 
-    void set_data(RegEnum reg_num, int32_t data);
-    int32_t get_data(uint8_t regNum) const;
-    void update_regs(const int32_t* r);
-    const Register* get_regs_data();
-    void print();
+    // setters and getters
+    void set_data(RegNum reg_num, int32_t data);
+    int32_t get_data(uint8_t regNum);
+    void set_reg(const Registers & reg);
+    Registers & get_reg();
+
+    void print_log(std::ofstream & log);
 
 private:
-    std::array<Register, NUM_REGISTERS> r;
-
-    std::ofstream *log;
+    Registers reg;
 };
 
-#endif // REGISTER_FILE
+} // namespace CPU
+
+#endif // REGISTER_FILE_HPP

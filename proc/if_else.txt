@@ -5,3 +5,4 @@ sub  $t7 $v1 $v2
 jump 7
 add  $t3 $t1 $t2
 nop
+halt

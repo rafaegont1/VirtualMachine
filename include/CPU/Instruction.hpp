@@ -4,13 +4,16 @@
 #include <cstdint>
 #include <string>
 #include <vector>
+#include "CPU/RegFile.hpp"
 
-namespace Instruction {
+namespace CPU {
+
+struct Instruction {
     enum Opcode : uint8_t {
         NOP = 0x00, // no operation
         ADD,        // add
         SUB,        // subtract
-        MULT,       // multiply
+        MUL,       // multiply
         DIV,        // divide
         LI,         // load immeadiate
         INC,        // increment
@@ -23,12 +26,23 @@ namespace Instruction {
         BLEZ,       // branch on lesser or equal to zero
         BLTZ,       // branch on lesser than zero
         LOAD,       // load variable from memory
-        STORE       // store variable in memory
+        STORE,      // store variable in memory
+        HALT        // signal to end progrma
     };
 
-    Opcode get_opcode(const std::string& opcode_name);
-    std::vector<std::vector<std::string>> load_program(const std::string& file_name);
-    bool is_branch(Instruction::Opcode opcode);
-}
+    static const std::vector<std::string> NOP_INSTR;
+
+    static Opcode get_opcode(const std::string & opcode_text);
+
+    bool is_branch();
+
+    const std::vector<std::string> * text;
+    Opcode opcode;
+    RegFile::RegNum rd, rs, rt;
+    int32_t imm;
+    uint32_t pid;
+};
+
+} // namespace CPU
 
 #endif // INSTRUCTION_HPP
