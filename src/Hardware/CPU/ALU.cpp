@@ -1,12 +1,8 @@
-#include "CPU/ALU.hpp"
+#include "Hardware/CPU/ALU.hpp"
 
 #include <stdexcept> // for zero division execution
 
-namespace CPU {
-
-ALU::ALU()
-{
-}
+namespace Hardware::CPU {
 
 int32_t ALU::add(const int32_t op_a, const int32_t op_b)
 {
@@ -78,4 +74,4 @@ inline void ALU::set_flags(int32_t result)
                (result > 0 && result < INT32_MIN);
 }
 
-} // namespace CPU
+} // namespace Hardware::CPU

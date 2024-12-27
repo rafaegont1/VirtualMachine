@@ -1,12 +1,12 @@
-#ifndef INSTRUCTION_HPP
-#define INSTRUCTION_HPP
+#ifndef INSTRUCTION_HPP_
+#define INSTRUCTION_HPP_
 
 #include <cstdint>
 #include <string>
 #include <vector>
-#include "CPU/RegFile.hpp"
+#include "Hardware/CPU/RegFile.hpp"
 
-namespace CPU {
+namespace Hardware::CPU {
 
 struct Instruction {
     enum Opcode : uint8_t {
@@ -36,13 +36,15 @@ struct Instruction {
 
     bool is_branch();
 
-    const std::vector<std::string> * text;
-    Opcode opcode;
-    RegFile::RegNum rd, rs, rt;
-    int32_t imm;
+    const std::vector<std::string>* text = &NOP_INSTR;
+    Opcode opcode = Opcode::NOP;
+    RegFile::RegNum rd = RegFile::RegNum::ZERO;
+    RegFile::RegNum rs = RegFile::RegNum::ZERO;
+    RegFile::RegNum rt = RegFile::RegNum::ZERO;
+    int32_t imm = 0;
     uint32_t pid;
 };
 
-} // namespace CPU
+} // namespace Hardware::CPU
 
-#endif // INSTRUCTION_HPP
+#endif // INSTRUCTION_HPP_

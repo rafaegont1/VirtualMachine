@@ -1,11 +1,9 @@
 #include <iostream>
 #include <cctype>
-// #include <fstream>
-// #include <sstream>
 #include <unordered_map>
-#include "CPU/Instruction.hpp"
+#include "Hardware/CPU/Instruction.hpp"
 
-namespace CPU {
+namespace Hardware::CPU {
 
 const std::vector<std::string> Instruction::NOP_INSTR = {"nop"};
 
@@ -47,4 +45,4 @@ bool Instruction::is_branch()
         || opcode == BGTZ || opcode == BLEZ || opcode == BLTZ);
 }
 
-} // namespace CPU
+} // namespace Hardware::CPU

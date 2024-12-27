@@ -19,15 +19,15 @@ endif()
 # Set source files
 set(SOURCES
     src/main.cpp
-    src/Process.cpp
-    src/OS/BootLoader.cpp
-    src/CPU/RegFile.cpp
-    src/CPU/Instruction.cpp
-    src/CPU/ALU.cpp
-    src/CPU/Pipeline.cpp
-    src/CPU/Core.cpp
-    src/RAM.cpp
-    src/VirtualMachine.cpp
+    src/Hardware/CPU/RegFile.cpp
+    src/Hardware/CPU/Instruction.cpp
+    src/Hardware/CPU/ALU.cpp
+    src/Hardware/CPU/Pipeline.cpp
+    src/Hardware/CPU/Core.cpp
+    src/Hardware/RAM.cpp
+    src/OS/Scheduling/FCFS.cpp
+    src/OS/Process.cpp
+    src/OS/VirtualMachine.cpp
 )
 
 # Create the executable target

@@ -1,12 +1,12 @@
-#ifndef REGISTER_FILE_HPP
-#define REGISTER_FILE_HPP
+#ifndef REGISTER_FILE_HPP_
+#define REGISTER_FILE_HPP_
 
 #include <fstream>
 #include <string>
 #include <array>
 #include <cstdint>
 
-namespace CPU {
+namespace Hardware::CPU {
 
 class RegFile {
 public:
@@ -49,23 +49,20 @@ public:
 
     using Registers = std::array<int32_t, RegFile::NUM_REGISTERS>;
 
-    RegFile();
-    virtual ~RegFile() = default;
-
-    static RegNum get_reg_num(const std::string & reg_name);
+    static RegNum reg_index(const std::string& reg_name);
 
     // setters and getters
-    void set_data(RegNum reg_num, int32_t data);
-    int32_t get_data(uint8_t regNum);
-    void set_reg(const Registers & reg);
-    Registers & get_reg();
+    void reg(RegNum index, int32_t data);
+    int32_t reg(uint8_t index) const;
+    void reg(Registers& reg);
+    const Registers& reg() const;
 
-    void print_log(std::ofstream & log);
+    void print_log(std::ofstream& log);
 
 private:
-    Registers reg;
+    Registers reg_;
 };
 
-} // namespace CPU
+} // namespace Hardware::CPU
 
-#endif // REGISTER_FILE_HPP
+#endif // REGISTER_FILE_HPP_

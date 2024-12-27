@@ -1,19 +1,16 @@
 #include <iostream>
-#include "VirtualMachine.hpp"
+#include "OS/VirtualMachine.hpp"
 
-int main(int argc, char ** argv)
+int main(int argc, char** argv)
 {
     if (argc < 2) {
-        std::cerr << "Uso: " << argv[0] << " <program_name>" << std::endl;
+        std::cerr << "usage: " << argv[0] << " <program_name>" << std::endl;
         exit(EXIT_FAILURE);
     }
 
-    VirtualMachine vm;
+    OS::VirtualMachine vm;
 
-    for (int i = 1; i < argc; i++) {
-        vm.create_process(argv[i]);
-    }
-
+    vm.bootloader(argc, argv);
     vm.run();
 
     return 0;
