@@ -6,7 +6,7 @@
 
 namespace Hardware {
 
-void RAM::create_process(const std::string& file_name, const OS::Process::Time quantum)
+void RAM::create_process(const std::string& file_name, OS::Process::Time quantum)
 {
     std::lock_guard<std::mutex> lock(mtx);
 

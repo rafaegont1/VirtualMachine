@@ -18,6 +18,11 @@ Process::Process(const std::string& file_name, const Time quantum) :
     timestamp_{0ms}
 {
     read_file(file_name);
+
+    cpu_state_.reg[Hardware::CPU::RegFile::ZERO] = 0;
+    for (int n = 1; n < Hardware::CPU::RegFile::NUM_REGISTERS; n++) {
+        cpu_state_.reg[n] = n + 100;
+    }
 }
 
 uint32_t Process::pid() const { return pid_; }

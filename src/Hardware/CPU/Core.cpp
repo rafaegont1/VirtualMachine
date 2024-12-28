@@ -28,22 +28,19 @@ Core::~Core()
 void Core::run(RAM& mem)
 {
     OS::Process* proc;
-    bool quantum_expired;
 
     while (!mem.is_fcfs_empty()) {
         proc = context_restore(mem);
 
-        // set quantum expired to false before pipeline starts
-        quantum_expired = false;
-
         // run pipeline cycles
         do {
-            log_ << "CLOCK: " << ++clk << '\n';
+            log_ << "CLOCK: " << ++clk       << '\n'
+                 << "PID: "   << proc->pid() << '\n';
 
-            pipeline_.instr_fetch(pc_, *proc);
-            pipeline_.instr_decode(*proc);
-            pipeline_.execute(rf_, pc_);
-            pipeline_.mem_access(proc->pid(), rf_, mem);
+            pipeline_.instr_fetch(pc_, std::ref(*proc));
+            pipeline_.instr_decode(std::ref(*proc));
+            pipeline_.execute(std::ref(rf_), std::ref(pc_));
+            pipeline_.mem_access(proc->pid(), std::ref(rf_), std::ref(mem));
             pipeline_.write_back();
 
             rf_.print_log(log_);
@@ -52,12 +49,13 @@ void Core::run(RAM& mem)
             log_ << "==============================================================\n";
 
             pipeline_.update();
-
-            quantum_expired = (proc->cpu_time() > proc->quantum());
-        } while (proc->state() != OS::Process::State::TERMINATED
-            && !quantum_expired);
+        } while ((proc->state() != OS::Process::State::TERMINATED)
+            && (proc->cpu_time() < proc->quantum()));
 
         if (proc->state() != OS::Process::State::TERMINATED) {
+            log_ << "--------------------------------------------------------------\n"
+                 << "Context switch!\n"
+                 << "--------------------------------------------------------------\n";
             context_switch(proc, mem);
         }
     }
