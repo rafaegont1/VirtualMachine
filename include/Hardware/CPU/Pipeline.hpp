@@ -5,15 +5,15 @@
 #include "Hardware/CPU/ALU.hpp"
 #include "Hardware/CPU/RegFile.hpp"
 #include "Hardware/RAM.hpp"
-#include "OS/Process.hpp"
+#include "OS/PCB.hpp"
 #include "Hardware/CPU/Instruction.hpp"
 
 namespace Hardware::CPU {
 
 class Pipeline {
 public:
-    void instr_fetch(uint32_t& pc, const OS::Process& proc);
-    void instr_decode(OS::Process& proc);
+    void instr_fetch(uint32_t& pc, const OS::PCB& proc);
+    void instr_decode(OS::PCB& proc);
     void execute(RegFile& rf, uint32_t& pc);
     void mem_access(uint32_t pid, RegFile& rf, RAM& mem);
     void write_back();

@@ -8,13 +8,13 @@
 
 namespace OS {
 
-class Process {
+class PCB {
 public:
     using TimePoint = std::chrono::time_point<std::chrono::high_resolution_clock>;
     using Time = std::chrono::duration<double, std::milli>;
 
     struct CPUState {
-        Hardware::CPU::RegFile::Registers reg;
+        Hardware::CPU::RegFile::Registers gpr;
         uint32_t pc;
     };
 
@@ -25,7 +25,7 @@ public:
         TERMINATED
     };
 
-    Process(const std::string& file_name, const Time quantum);
+    PCB(const std::string& file_name, const Time quantum);
 
     // setters and getters
     uint32_t pid() const;
@@ -42,7 +42,9 @@ public:
     void stop();
     void terminate();
 
-    Time cpu_time();
+    Time cpu_time() const;
+
+    std::string info();
 
 private:
     static uint32_t count_;

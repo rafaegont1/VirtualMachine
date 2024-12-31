@@ -54,13 +54,13 @@ public:
     // setters and getters
     void reg(RegNum index, int32_t data);
     int32_t reg(uint8_t index) const;
-    void reg(Registers& reg);
-    const Registers& reg() const;
+    void gpr(Registers& reg);
+    const Registers& gpr() const;
 
     void print_log(std::ofstream& log);
 
 private:
-    Registers reg_;
+    Registers gpr_;
 };
 
 } // namespace Hardware::CPU

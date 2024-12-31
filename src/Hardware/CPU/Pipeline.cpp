@@ -5,13 +5,13 @@
 
 namespace Hardware::CPU {
 
-void Pipeline::instr_fetch(uint32_t& pc, const OS::Process& proc)
+void Pipeline::instr_fetch(uint32_t& pc, const OS::PCB& proc)
 {
     instr_if.text = proc.get_instr(pc++);
     instr_if.pid = proc.pid();
 }
 
-void Pipeline::instr_decode(OS::Process& proc)
+void Pipeline::instr_decode(OS::PCB& proc)
 {
     instr_id.opcode = Instruction::get_opcode((*instr_id.text)[0]);
 

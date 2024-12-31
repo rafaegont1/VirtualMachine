@@ -1,4 +1,4 @@
-#include "OS/Process.hpp"
+#include "OS/PCB.hpp"
 
 #include <fstream>
 #include <sstream>
@@ -9,9 +9,9 @@ namespace OS {
 
 using namespace std::chrono_literals;
 
-uint32_t Process::count_ = 0;
+uint32_t PCB::count_ = 0;
 
-Process::Process(const std::string& file_name, const Time quantum) :
+PCB::PCB(const std::string& file_name, const Time quantum) :
     pid_{++count_},
     state_{State::READY},
     quantum_{quantum},
@@ -19,43 +19,43 @@ Process::Process(const std::string& file_name, const Time quantum) :
 {
     read_file(file_name);
 
-    cpu_state_.reg[Hardware::CPU::RegFile::ZERO] = 0;
+    cpu_state_.gpr[Hardware::CPU::RegFile::ZERO] = 0;
     for (int n = 1; n < Hardware::CPU::RegFile::NUM_REGISTERS; n++) {
-        cpu_state_.reg[n] = n + 100;
+        cpu_state_.gpr[n] = n + 100;
     }
 }
 
-uint32_t Process::pid() const { return pid_; }
+uint32_t PCB::pid() const { return pid_; }
 
-Process::State Process::state() const { return state_; }
+PCB::State PCB::state() const { return state_; }
 
-void Process::quantum(const Time new_value) { quantum_ = new_value; }
+void PCB::quantum(const Time new_value) { quantum_ = new_value; }
 
-Process::Time Process::quantum() const { return quantum_; }
+PCB::Time PCB::quantum() const { return quantum_; }
 
-Process::Time Process::timestamp() const { return timestamp_; }
+PCB::Time PCB::timestamp() const { return timestamp_; }
 
-const std::vector<std::string>* Process::get_instr(const uint32_t pc) const
+const std::vector<std::string>* PCB::get_instr(const uint32_t pc) const
 {
     return (pc < text_.size())
         ? &text_[pc]
         : &Hardware::CPU::Instruction::NOP_INSTR;
 }
 
-void Process::cpu_state(const Process::CPUState& cpu_state)
+void PCB::cpu_state(const PCB::CPUState& cpu_state)
 {
     cpu_state_ = cpu_state;
 }
 
-const Process::CPUState& Process::cpu_state() const { return cpu_state_; }
+const PCB::CPUState& PCB::cpu_state() const { return cpu_state_; }
 
-void Process::start()
+void PCB::start()
 {
     state_ = State::RUNNING;
     begin_ = std::chrono::high_resolution_clock::now();
 }
 
-void Process::stop()
+void PCB::stop()
 {
     // update timestamp
     TimePoint end = std::chrono::high_resolution_clock::now();
@@ -65,12 +65,12 @@ void Process::stop()
     state_ = State::READY;
 }
 
-void Process::terminate()
+void PCB::terminate()
 {
     state_ = State::TERMINATED;
 }
 
-Process::Time Process::cpu_time()
+PCB::Time PCB::cpu_time() const
 {
     if (state_ != State::RUNNING) return 0ms;
 
@@ -79,7 +79,15 @@ Process::Time Process::cpu_time()
     return (end - begin_);
 }
 
-void Process::read_file(const std::string& file_name)
+std::string PCB::info()
+{
+    return "PID: "       + std::to_string(pid())               + "\n"
+           "Quantum: "   + std::to_string(quantum().count())   + "\n"
+           "CPU time: "  + std::to_string(cpu_time().count())  + "\n"
+           "Timestamp: " + std::to_string(timestamp().count()) + "\n";
+}
+
+void PCB::read_file(const std::string& file_name)
 {
     std::ifstream file(file_name);
     std::string line;

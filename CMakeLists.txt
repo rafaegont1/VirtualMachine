@@ -26,7 +26,7 @@ set(SOURCES
     src/Hardware/CPU/Core.cpp
     src/Hardware/RAM.cpp
     src/OS/Scheduling/FCFS.cpp
-    src/OS/Process.cpp
+    src/OS/PCB.cpp
     src/OS/VirtualMachine.cpp
 )
 

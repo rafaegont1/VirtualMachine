@@ -2,18 +2,18 @@
 
 namespace OS::Scheduling {
 
-void FCFS::push(Process& proc)
+void FCFS::push(PCB& proc)
 {
     queue.push(&proc);
 }
 
-Process& FCFS::pop()
+PCB& FCFS::pop()
 {
     if (queue.empty()) {
         throw std::runtime_error("Can't fetch process; FCFS queue is empty");
     }
 
-    Process& proc = *queue.front();
+    PCB& proc = *queue.front();
 
     queue.pop();
 

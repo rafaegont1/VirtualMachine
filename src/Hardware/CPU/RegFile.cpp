@@ -53,7 +53,7 @@ RegFile::RegNum RegFile::reg_index(const std::string& reg_name)
     return iter->second;
 }
 
-void RegFile::reg(RegFile::RegNum index, int32_t data) { reg_[index] = data; }
+void RegFile::reg(RegFile::RegNum index, int32_t data) { gpr_[index] = data; }
 
 int32_t RegFile::reg(uint8_t index) const
 {
@@ -64,48 +64,48 @@ int32_t RegFile::reg(uint8_t index) const
         );
     }
 
-    return reg_[index];
+    return gpr_[index];
 }
 
-void RegFile::reg(RegFile::Registers& reg) { reg_ = reg; }
+void RegFile::gpr(RegFile::Registers& reg) { gpr_ = reg; }
 
-const RegFile::Registers& RegFile::reg() const { return reg_; }
+const RegFile::Registers& RegFile::gpr() const { return gpr_; }
 
 void RegFile::print_log(std::ofstream& log)
 {
     log << "\nGENERAL-PURPOSE REGISTERS\n"
-        << "$zero: " << reg_[ZERO] << '\t'
-        << "$at: "   << reg_[AT]   << '\t'
-        << "$v0: "   << reg_[V0]   << '\t'
-        << "$v1: "   << reg_[V1]   << '\n'
-        << "$a0: "   << reg_[A0]   << '\t'
-        << "$a1: "   << reg_[A1]   << '\t'
-        << "$a2: "   << reg_[A2]   << '\t'
-        << "$a3: "   << reg_[A3]   << '\n'
-        << "$t0: "   << reg_[T0]   << '\t'
-        << "$t1: "   << reg_[T1]   << '\t'
-        << "$t2: "   << reg_[T2]   << '\t'
-        << "$t3: "   << reg_[T3]   << '\n'
-        << "$t4: "   << reg_[T4]   << '\t'
-        << "$t5: "   << reg_[T5]   << '\t'
-        << "$t6: "   << reg_[T6]   << '\t'
-        << "$t7: "   << reg_[T7]   << '\n'
-        << "$s0: "   << reg_[S0]   << '\t'
-        << "$s1: "   << reg_[S1]   << '\t'
-        << "$s2: "   << reg_[S2]   << '\t'
-        << "$s3: "   << reg_[S3]   << '\n'
-        << "$s4: "   << reg_[S4]   << '\t'
-        << "$s5: "   << reg_[S5]   << '\t'
-        << "$s6: "   << reg_[S6]   << '\t'
-        << "$s7: "   << reg_[S7]   << '\n'
-        << "$t8: "   << reg_[T8]   << '\t'
-        << "$t9: "   << reg_[T9]   << '\t'
-        << "$k0: "   << reg_[K0]   << '\t'
-        << "$k1: "   << reg_[K1]   << '\n'
-        << "$gp: "   << reg_[GP]   << '\t'
-        << "$sp: "   << reg_[SP]   << '\t'
-        << "$fp: "   << reg_[FP]   << '\t'
-        << "$ra: "   << reg_[RA]   << '\n'
+        << "$zero: " << gpr_[ZERO] << '\t'
+        << "$at: "   << gpr_[AT]   << '\t'
+        << "$v0: "   << gpr_[V0]   << '\t'
+        << "$v1: "   << gpr_[V1]   << '\n'
+        << "$a0: "   << gpr_[A0]   << '\t'
+        << "$a1: "   << gpr_[A1]   << '\t'
+        << "$a2: "   << gpr_[A2]   << '\t'
+        << "$a3: "   << gpr_[A3]   << '\n'
+        << "$t0: "   << gpr_[T0]   << '\t'
+        << "$t1: "   << gpr_[T1]   << '\t'
+        << "$t2: "   << gpr_[T2]   << '\t'
+        << "$t3: "   << gpr_[T3]   << '\n'
+        << "$t4: "   << gpr_[T4]   << '\t'
+        << "$t5: "   << gpr_[T5]   << '\t'
+        << "$t6: "   << gpr_[T6]   << '\t'
+        << "$t7: "   << gpr_[T7]   << '\n'
+        << "$s0: "   << gpr_[S0]   << '\t'
+        << "$s1: "   << gpr_[S1]   << '\t'
+        << "$s2: "   << gpr_[S2]   << '\t'
+        << "$s3: "   << gpr_[S3]   << '\n'
+        << "$s4: "   << gpr_[S4]   << '\t'
+        << "$s5: "   << gpr_[S5]   << '\t'
+        << "$s6: "   << gpr_[S6]   << '\t'
+        << "$s7: "   << gpr_[S7]   << '\n'
+        << "$t8: "   << gpr_[T8]   << '\t'
+        << "$t9: "   << gpr_[T9]   << '\t'
+        << "$k0: "   << gpr_[K0]   << '\t'
+        << "$k1: "   << gpr_[K1]   << '\n'
+        << "$gp: "   << gpr_[GP]   << '\t'
+        << "$sp: "   << gpr_[SP]   << '\t'
+        << "$fp: "   << gpr_[FP]   << '\t'
+        << "$ra: "   << gpr_[RA]   << '\n'
         << std::endl;
 }
 

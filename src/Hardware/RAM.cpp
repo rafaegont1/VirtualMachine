@@ -1,20 +1,20 @@
 #include "Hardware/RAM.hpp"
-#include "OS/Process.hpp"
+#include "OS/PCB.hpp"
 
 #include <iostream>
 #include <fstream>
 
 namespace Hardware {
 
-void RAM::create_process(const std::string& file_name, OS::Process::Time quantum)
+void RAM::create_process(const std::string& file_name, OS::PCB::Time quantum)
 {
     std::lock_guard<std::mutex> lock(mtx);
 
-    pcb.emplace_back(file_name, quantum);
-    fcfs.push(&pcb.back());
+    pcbs.emplace_back(file_name, quantum);
+    fcfs.push(&pcbs.back());
 }
 
-OS::Process* RAM::context_restore()
+OS::PCB* RAM::context_restore()
 {
     std::lock_guard<std::mutex> lock(mtx);
 
@@ -22,7 +22,7 @@ OS::Process* RAM::context_restore()
         throw std::runtime_error("Can't get next process; FCFS queue is empty");
     }
 
-    OS::Process* proc;
+    OS::PCB* proc;
 
     proc = fcfs.front();
     fcfs.pop();
@@ -31,14 +31,14 @@ OS::Process* RAM::context_restore()
     return proc;
 }
 
-void RAM::context_switch(OS::Process* proc, OS::Process::CPUState cpu_state)
+void RAM::context_switch(OS::PCB* proc, OS::PCB::CPUState cpu_state)
 {
     std::lock_guard<std::mutex> lock(mtx);
 
     proc->stop();
     proc->cpu_state(cpu_state);
 
-    if (proc->state() != OS::Process::State::TERMINATED) {
+    if (proc->state() != OS::PCB::State::TERMINATED) {
         fcfs.push(proc);
     }
 }

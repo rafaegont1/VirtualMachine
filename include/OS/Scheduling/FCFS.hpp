@@ -2,18 +2,18 @@
 #define FCFS_HPP_
 
 #include <queue>
-#include "OS/Process.hpp"
+#include "OS/PCB.hpp"
 
 namespace OS::Scheduling {
 
 class FCFS {
 public:
-    void push(Process& proc);
-    Process& pop();
+    void push(PCB& proc);
+    PCB& pop();
     bool empty() const;
 
 private:
-    std::queue<Process*> queue;
+    std::queue<PCB*> queue;
 };
 
 } // namespace OS::Scheduling

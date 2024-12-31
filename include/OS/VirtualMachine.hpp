@@ -23,7 +23,7 @@ private:
     };
 
     void create_process(const std::string& file_name);
-    Process::Time generate_random_quantum(uint8_t min, uint8_t max);
+    PCB::Time generate_random_quantum(uint8_t min, uint8_t max);
 
     Hardware::RAM mem;
     std::array<CoreThreadPool, NUM_CORES> cpu;
