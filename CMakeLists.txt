@@ -2,13 +2,13 @@
 cmake_minimum_required(VERSION 3.5)
 
 # Define the project name
-project(vm)
+project(minix)
 
 # Generate symbols for IDE indexer
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Set default C++ standard to C++17
-set(CMAKE_CXX_STANDARD 17)
+# Set default C++ standard to C++20
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 # Add compiler options for GNU/Clang
@@ -18,16 +18,18 @@ endif()
 
 # Set source files
 set(SOURCES
+    src/HW/ISA/Code.cpp
+    src/HW/ISA/Encoding.cpp
+    src/HW/RAM/Allocator.cpp
+    src/HW/RAM/DataSpace.cpp
+    src/HW/CPU/RegFile.cpp
+    src/HW/CPU/ALU.cpp
+    src/HW/CPU/Pipeline.cpp
+    src/HW/CPU/Core.cpp
     src/main.cpp
-    src/Hardware/CPU/RegFile.cpp
-    src/Hardware/CPU/Instruction.cpp
-    src/Hardware/CPU/ALU.cpp
-    src/Hardware/CPU/Pipeline.cpp
-    src/Hardware/CPU/Core.cpp
-    src/Hardware/RAM.cpp
-    src/OS/Scheduling/FCFS.cpp
+    src/OS/Scheduler.cpp
+    src/OS/Minix.cpp
     src/OS/PCB.cpp
-    src/OS/VirtualMachine.cpp
 )
 
 # Create the executable target

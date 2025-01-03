@@ -1,5 +1,5 @@
 #include <iostream>
-#include "OS/VirtualMachine.hpp"
+#include "OS/Minix.hpp"
 
 int main(int argc, char** argv)
 {
@@ -8,9 +8,7 @@ int main(int argc, char** argv)
         exit(EXIT_FAILURE);
     }
 
-    OS::VirtualMachine vm;
-
-    vm.bootloader(argc, argv);
+    OS::Minix vm(argc, argv);
     vm.run();
 
     return 0;

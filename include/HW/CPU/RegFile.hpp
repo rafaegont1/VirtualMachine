@@ -6,11 +6,11 @@
 #include <array>
 #include <cstdint>
 
-namespace Hardware::CPU {
+namespace HW::CPU {
 
 class RegFile {
 public:
-    enum RegNum : uint8_t {
+    enum Index : uint8_t {
         ZERO = 0, // $zero
         AT,       // $at
         V0,       // $v0
@@ -49,20 +49,21 @@ public:
 
     using Registers = std::array<int32_t, RegFile::NUM_REGISTERS>;
 
-    static RegNum reg_index(const std::string& reg_name);
+    RegFile();
+    static Index reg_index(const std::string& reg_alias);
 
     // setters and getters
-    void reg(RegNum index, int32_t data);
+    void reg(Index index, int32_t data);
     int32_t reg(uint8_t index) const;
     void gpr(Registers& reg);
     const Registers& gpr() const;
 
-    void print_log(std::ofstream& log);
+    void write_log(std::ofstream& log);
 
 private:
-    Registers gpr_;
+    Registers gpr_; // General-Purpose Registers
 };
 
-} // namespace Hardware::CPU
+} // namespace HW::CPU
 
 #endif // REGISTER_FILE_HPP_

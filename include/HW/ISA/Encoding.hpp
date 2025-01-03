@@ -1,19 +1,22 @@
-#ifndef INSTRUCTION_HPP_
-#define INSTRUCTION_HPP_
+#ifndef ENCODING_HPP
+#define ENCODING_HPP
 
 #include <cstdint>
+#include <functional>
 #include <string>
 #include <vector>
-#include "Hardware/CPU/RegFile.hpp"
+#include <memory>
+#include "HW/ISA/Code.hpp"
+#include "HW/CPU/RegFile.hpp"
 
-namespace Hardware::CPU {
+namespace HW::ISA {
 
-struct Instruction {
+struct Encoding {
     enum Opcode : uint8_t {
         NOP = 0x00, // no operation
         ADD,        // add
         SUB,        // subtract
-        MUL,       // multiply
+        MUL,        // multiply
         DIV,        // divide
         LI,         // load immeadiate
         INC,        // increment
@@ -27,24 +30,19 @@ struct Instruction {
         BLTZ,       // branch on lesser than zero
         LOAD,       // load variable from memory
         STORE,      // store variable in memory
-        HALT        // signal to end progrma
+        HALT        // signal to end program
     };
 
-    static const std::vector<std::string> NOP_INSTR;
+    static Opcode get_opcode(const std::string& mnemonic);
 
-    static Opcode get_opcode(const std::string & opcode_text);
-
-    bool is_branch();
-
-    const std::vector<std::string>* text = &NOP_INSTR;
+    std::reference_wrapper<const Code::Line> code_line = Code::NOP_LINE;
     Opcode opcode = Opcode::NOP;
-    RegFile::RegNum rd = RegFile::RegNum::ZERO;
-    RegFile::RegNum rs = RegFile::RegNum::ZERO;
-    RegFile::RegNum rt = RegFile::RegNum::ZERO;
+    CPU::RegFile::Index rd = CPU::RegFile::Index::ZERO;
+    CPU::RegFile::Index rs = CPU::RegFile::Index::ZERO;
+    CPU::RegFile::Index rt = CPU::RegFile::Index::ZERO;
     int32_t imm = 0;
-    uint32_t pid;
 };
 
-} // namespace Hardware::CPU
+} // namespace HW::ISA
 
-#endif // INSTRUCTION_HPP_
+#endif // ENCODING_HPP
