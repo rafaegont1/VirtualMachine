@@ -1,4 +1,3 @@
-#include <iostream>
 #include <cctype>
 #include <unordered_map>
 #include "HW/ISA/Encoding.hpp"
@@ -38,7 +37,7 @@ Encoding::Opcode Encoding::get_opcode(const std::string& mnemonic)
     return iter->second;
 }
 
-bool Encoding::is_branch() const
+bool Encoding::is_jump_or_branch() const
 {
     return (opcode == JUMP || opcode == BEQ || opcode == BNE || opcode == BGEZ
         || opcode == BGTZ || opcode == BLEZ || opcode == BLTZ);

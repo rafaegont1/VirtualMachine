@@ -1,9 +1,7 @@
 #include "OS/Minix.hpp"
 
-#include <iostream>
 #include <memory>
 #include <random>
-#include "HW/ISA/Encoding.hpp"
 #include "HW/RAM/Allocator.hpp"
 
 namespace OS {
@@ -21,6 +19,7 @@ void Minix::bootloader(int argc, char** argv)
         std::shared_ptr<OS::PCB> proc =
             HW::RAM::Allocator::create_process(file_name, quantum);
 
+        proc->set_state(OS::PCB::State::READY);
         scheduler_.push(proc);
     }
 }
@@ -36,11 +35,12 @@ void Minix::run()
 void Minix::schedule(const uint8_t core_id)
 {
     while (!scheduler_.empty()) {
+        // context restore (restore state of process and cpu)
         std::shared_ptr<OS::PCB> proc = scheduler_.pop();
         OS::PCB::Time cpu_time = std::chrono::milliseconds(0);
 
-        // FIXME: o chaveamento de processos está ocorrendo a cada clock, parece
-        // ter algo errado dentro da condição deste 'do while'
+        proc->set_state(OS::PCB::State::RUNNING);
+
         do {
             auto begin = std::chrono::high_resolution_clock::now();
 
@@ -55,7 +55,9 @@ void Minix::schedule(const uint8_t core_id)
         OS::PCB::Time new_timestamp = proc->get_timestamp() + cpu_time;
         proc->set_timestamp(new_timestamp);
 
+        // context switch (save state of process and cpu)
         if (proc->get_state() != OS::PCB::State::TERMINATED) {
+            proc->set_state(OS::PCB::State::READY);
             scheduler_.push(proc);
         }
     }

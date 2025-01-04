@@ -16,9 +16,13 @@ void Pipeline::instr_fetch()
         cpu.pipeline.stall_count_--;
     } else {
         cpu.pipeline.if_enc.code_line = proc_->fetch_line(cpu.pc++);
-        // FIXME: consertar o stall, pois aqui ainda não foi feita a
-        // decodificação do mnemonic para saber o opcode
-        if (cpu.pipeline.if_enc.is_branch()) {
+
+        // HACK: it's preferable to get the opcode of the instruction in ID
+        // stage, but we need to know it to put stalls so the branch or jump is
+        // evaluated before any other instruction is fetched
+        auto code_line = cpu.pipeline.if_enc.code_line.get();
+        cpu.pipeline.if_enc.opcode = ISA::Encoding::get_opcode(code_line[0]);
+        if (cpu.pipeline.if_enc.is_jump_or_branch()) {
             cpu.pipeline.stall_count_ += 2;
         }
     }

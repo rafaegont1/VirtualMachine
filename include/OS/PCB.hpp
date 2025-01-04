@@ -65,6 +65,7 @@ private:
 
     // TimePoint begin_;
     Time quantum_;
+    // TODO: verificar se o timestamp é isso mesmo, ou deve ser usado de outra forma
     Time timestamp_;
 };
 
