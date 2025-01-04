@@ -15,11 +15,6 @@ public:
     using TimePoint = std::chrono::time_point<std::chrono::high_resolution_clock>;
     using Time = std::chrono::duration<double, std::milli>;
 
-    // struct CPUState {
-    //     HW::CPU::RegFile rf;
-    //     uint32_t pc;
-    // };
-
     enum class State : uint8_t {
         NEW,
         READY,
@@ -37,20 +32,10 @@ public:
     void set_state(PCB::State new_value);
     void set_quantum(Time new_value);
     Time get_quantum() const;
-    void set_timestamp(Time new_value);
-    Time get_timestamp() const;
-    // void set_cpu_state(const HW::CPU::State& new_value);
-    // HW::CPU::State get_cpu_state() const;
 
     const HW::ISA::Code::Line& fetch_line(const uint32_t pc) const;
 
-    void start();
-    void stop();
-    // void terminate();
-
     Time cpu_time() const;
-
-    // std::string info();
 
     HW::CPU::CPUState cpu_state;
     HW::RAM::DataSpace mem;
@@ -63,10 +48,7 @@ private:
     State state_;
     HW::ISA::Code code_;
 
-    // TimePoint begin_;
     Time quantum_;
-    // TODO: verificar se o timestamp é isso mesmo, ou deve ser usado de outra forma
-    Time timestamp_;
 };
 
 } // namespace OS

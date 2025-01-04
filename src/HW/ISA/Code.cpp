@@ -36,7 +36,7 @@ const Code::Line& Code::fetch(const uint32_t pc) const
     return text_[pc];
 }
 
-uint32_t Code::loc() const
+uint32_t Code::size() const
 {
     return static_cast<uint32_t>(text_.size());
 }

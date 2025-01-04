@@ -10,8 +10,7 @@ PCB::PCB(const std::string& file_name, const Time quantum) :
     pid_{++count_},
     state_{State::NEW},
     code_{file_name},
-    quantum_{quantum},
-    timestamp_{std::chrono::milliseconds(0)}
+    quantum_{quantum}
 {
     const std::string log_name = "pid_" + std::to_string(pid_) + "_output.txt";
 
@@ -56,19 +55,9 @@ PCB::Time PCB::get_quantum() const
     return quantum_;
 }
 
-PCB::Time PCB::get_timestamp() const
-{
-    return timestamp_;
-}
-
-void PCB::set_timestamp(Time new_value)
-{
-    timestamp_ = new_value;
-}
-
 const HW::ISA::Code::Line& PCB::fetch_line(const uint32_t pc) const
 {
-    return (pc < code_.loc()) ? code_.fetch(pc) : HW::ISA::Code::NOP_LINE;
+    return (pc < code_.size()) ? code_.fetch(pc) : HW::ISA::Code::NOP_LINE;
 }
 
 } // namespace OS

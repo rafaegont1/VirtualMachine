@@ -4,8 +4,6 @@
 #include <cstdint>
 #include <functional>
 #include <string>
-#include <vector>
-#include <memory>
 #include "HW/ISA/Code.hpp"
 #include "HW/CPU/RegFile.hpp"
 

@@ -15,7 +15,7 @@ public:
 
     Code(const std::string& file_name);
     const Line& fetch(const uint32_t pc) const;
-    uint32_t loc() const; // get lines of code
+    uint32_t size() const;
 
 private:
     std::vector<Line> text_;

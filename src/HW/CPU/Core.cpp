@@ -12,9 +12,15 @@ Core::Core() : id_{count++}
 {
 }
 
-void Core::run_cycle(std::shared_ptr<OS::PCB> proc)
+void Core::run_cycle(std::shared_ptr<OS::PCB> proc, OS::PCB::TimePoint timestamp_begin)
 {
     pipeline_.set_proc(proc);
+
+    OS::PCB::TimePoint timestamp_end = std::chrono::high_resolution_clock::now();
+    OS::PCB::Time timestamp = timestamp_end - timestamp_begin;
+    proc->log << "CPU ID: "    << id_    << '\n'
+              << "CLOCK: "     << ++clk_ << '\n'
+              << "Timestamp: " << timestamp.count() << " ms\n";
 
     // run pipeline stages
     pipeline_.instr_fetch();
@@ -27,8 +33,6 @@ void Core::run_cycle(std::shared_ptr<OS::PCB> proc)
     const HW::CPU::CPUState& cpu = proc->cpu_state;
     const HW::RAM::DataSpace& mem = proc->mem;
 
-    proc->log << "CPU ID: " << id_    << '\n'
-              << "CLOCK: "  << ++clk_ << '\n';
     cpu.rf.print_log(proc->log);
     pipeline_.print_log(proc->log);
     mem.print_log(proc->log);

@@ -6,7 +6,8 @@
 
 namespace OS {
 
-Minix::Minix(int argc, char** argv)
+Minix::Minix(int argc, char** argv) :
+    timestamp_begin_(std::chrono::high_resolution_clock::now())
 {
     bootloader(argc, argv);
 }
@@ -28,6 +29,9 @@ void Minix::run()
 {
     for (int i = 0; i < NUM_CORES; i++) {
         threads_[i] = std::thread(&Minix::schedule, this, i);
+    }
+
+    for (int i = 0; i < NUM_CORES; i++) {
         threads_[i].join();
     }
 }
@@ -44,16 +48,12 @@ void Minix::schedule(const uint8_t core_id)
         do {
             auto begin = std::chrono::high_resolution_clock::now();
 
-            cpu_[core_id].run_cycle(proc);
+            cpu_[core_id].run_cycle(proc, timestamp_begin_);
 
             auto end = std::chrono::high_resolution_clock::now();
             cpu_time += (end - begin);
         } while (proc->get_state() == OS::PCB::State::RUNNING
             && (cpu_time < proc->get_quantum() || scheduler_.empty()));
-
-        // update process timestamp
-        OS::PCB::Time new_timestamp = proc->get_timestamp() + cpu_time;
-        proc->set_timestamp(new_timestamp);
 
         // context switch (save state of process and cpu)
         if (proc->get_state() != OS::PCB::State::TERMINATED) {

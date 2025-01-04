@@ -10,7 +10,7 @@ namespace OS {
 
 class Minix {
 public:
-    static const uint8_t NUM_CORES = 1;
+    static const uint8_t NUM_CORES = 2;
 
     Minix(int argc, char** argv);
 
@@ -20,6 +20,8 @@ public:
 private:
     PCB::Time generate_random_quantum(uint8_t min, uint8_t max);
     void schedule(const uint8_t core_id);
+
+    PCB::TimePoint timestamp_begin_;
 
     std::array<HW::CPU::Core, NUM_CORES> cpu_;
     std::array<std::thread, NUM_CORES> threads_;
