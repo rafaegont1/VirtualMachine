@@ -4,8 +4,8 @@
 #include <chrono>
 #include <cstdint>
 #include <fstream>
-#include "HW/CPU/RegFile.hpp"
 #include "HW/ISA/Code.hpp"
+#include "HW/CPU/CPUState.hpp"
 #include "HW/RAM/DataSpace.hpp"
 
 namespace OS {
@@ -15,10 +15,10 @@ public:
     using TimePoint = std::chrono::time_point<std::chrono::high_resolution_clock>;
     using Time = std::chrono::duration<double, std::milli>;
 
-    struct CPUState {
-        HW::CPU::RegFile rf;
-        uint32_t pc;
-    };
+    // struct CPUState {
+    //     HW::CPU::RegFile rf;
+    //     uint32_t pc;
+    // };
 
     enum class State : uint8_t {
         NEW,
@@ -52,7 +52,7 @@ public:
 
     // std::string info();
 
-    CPUState cpu_state;
+    HW::CPU::CPUState cpu_state;
     HW::RAM::DataSpace mem;
     std::ofstream log;
 

@@ -61,16 +61,6 @@ PCB::Time PCB::get_timestamp() const
     return timestamp_;
 }
 
-// void PCB::set_cpu_state(const HW::CPU::State& new_value)
-// {
-//     cpu_state_ = new_value;
-// }
-
-// HW::CPU::State PCB::get_cpu_state() const
-// {
-//     return cpu_state_;
-// }
-
 void PCB::set_timestamp(Time new_value)
 {
     timestamp_ = new_value;
@@ -80,30 +70,5 @@ const HW::ISA::Code::Line& PCB::fetch_line(const uint32_t pc) const
 {
     return (pc < code_.loc()) ? code_.fetch(pc) : HW::ISA::Code::NOP_LINE;
 }
-
-// void PCB::start()
-// {
-//     state_ = State::RUNNING;
-//     begin_ = std::chrono::high_resolution_clock::now();
-// }
-
-// void PCB::stop()
-// {
-//     // update timestamp
-//     TimePoint end = std::chrono::high_resolution_clock::now();
-//     timestamp_ += (end - begin_);
-
-//     // set process as ready to run again
-//     state_ = State::READY;
-// }
-
-// PCB::Time PCB::cpu_time() const
-// {
-//     if (state_ != State::RUNNING) return 0ms;
-
-//     TimePoint end = std::chrono::high_resolution_clock::now();
-
-//     return (end - begin_);
-// }
 
 } // namespace OS

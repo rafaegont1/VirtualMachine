@@ -31,16 +31,6 @@ void Minix::run()
         threads_[i] = std::thread(&Minix::schedule, this, i);
         threads_[i].join();
     }
-
-    // for (auto& core_thread : cpu) {
-    //     core_thread.th = std::thread(
-    //         &HW::CPU::Core::run, &core_thread.core, scheduler
-    //     );
-    // }
-
-    // for (auto& core_thread : cpu) {
-    //     core_thread.th.join();
-    // }
 }
 
 void Minix::schedule(const uint8_t core_id)
@@ -49,6 +39,8 @@ void Minix::schedule(const uint8_t core_id)
         std::shared_ptr<OS::PCB> proc = scheduler_.pop();
         OS::PCB::Time cpu_time = std::chrono::milliseconds(0);
 
+        // FIXME: o chaveamento de processos está ocorrendo a cada clock, parece
+        // ter algo errado dentro da condição deste 'do while'
         do {
             auto begin = std::chrono::high_resolution_clock::now();
 
@@ -66,9 +58,6 @@ void Minix::schedule(const uint8_t core_id)
         if (proc->get_state() != OS::PCB::State::TERMINATED) {
             scheduler_.push(proc);
         }
-
-        // std::unique_lock<std::mutex> lock(mtx_);
-        // cv_.wait(lock, [] { return !scheduler_.empty(); });
     }
 }
 
@@ -80,15 +69,5 @@ PCB::Time Minix::generate_random_quantum(uint8_t min, uint8_t max)
 
     return PCB::Time(distrib(gen));
 }
-
-// bool Minix::are_cores_available() const
-// {
-//     for (const auto& core : cpu_) {
-//         if (core.is_available()) {
-//             return true;
-//         }
-//     }
-//     return false;
-// }
 
 } // namespace OS

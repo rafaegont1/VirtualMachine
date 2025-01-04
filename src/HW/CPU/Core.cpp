@@ -3,7 +3,6 @@
 #include <iostream>
 #include "HW/RAM/DataSpace.hpp"
 #include "OS/PCB.hpp"
-#include "HW/CPU/RegFile.hpp"
 
 namespace HW::CPU {
 
@@ -25,7 +24,7 @@ void Core::run_cycle(std::shared_ptr<OS::PCB> proc)
     pipeline_.write_back();
 
     // print cycle on log
-    const OS::PCB::CPUState& cpu = proc->cpu_state;
+    const HW::CPU::CPUState& cpu = proc->cpu_state;
     const HW::RAM::DataSpace& mem = proc->mem;
 
     proc->log << "CPU ID: " << id_    << '\n'
