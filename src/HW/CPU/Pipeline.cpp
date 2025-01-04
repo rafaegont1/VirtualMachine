@@ -8,45 +8,20 @@
 
 namespace HW::CPU {
 
-void Pipeline::set_proc(std::shared_ptr<OS::PCB> proc)
-{
-    proc_ = proc;
-}
-
-void Pipeline::run(std::shared_ptr<OS::PCB> proc)
-{
-    proc_ = proc;
-    // do {
-        // log << "CLOCK: " << ++clk       << '\n';
-             // << "PID: "   << proc->pid() << '\n'
-             // << "Process CPU time: " << proc->cpu_time().count() << '\n';
-
-    instr_fetch();
-    instr_decode();
-    execute();
-    mem_access();
-    write_back();
-
-    print_log(proc->log);
-    proc_->mem.print_log(proc->pid(), log); // TODO
-    // log << "==============================================================\n";
-
-    update_stages();
-    // } while ((proc.state() != OS::PCB::State::TERMINATED)
-    //     && (proc.cpu_time() < proc.quantum()));
-}
-
 void Pipeline::instr_fetch()
 {
     OS::PCB::CPUState& cpu = proc_->cpu_state;
 
     if (stall_count_ > 0) {
         instr_if_.code_line = HW::ISA::Code::NOP_LINE;
-        // instr_if.proc = nullptr;
         stall_count_--;
     } else {
         instr_if_.code_line = proc_->fetch_line(cpu.pc++);
-        // instr_if.proc = proc;
+        // FIXME: consertar o stall, pois aqui ainda não foi feita a
+        // decodificação do mnemonic para saber o opcode
+        if (instr_if_.is_branch()) {
+            stall_count_ += 2;
+        }
     }
 }
 
@@ -219,26 +194,17 @@ void Pipeline::execute()
 
 void Pipeline::mem_access()
 {
-    auto code_line = instr_id_.code_line.get();
+    auto code_line = instr_mem_.code_line.get();
     OS::PCB::CPUState cpu = proc_->cpu_state;
     HW::RAM::DataSpace& mem = proc_->mem;
     HW::RAM::DataSpace::Variable var;
 
     if (instr_mem_.opcode == ISA::Encoding::Opcode::LOAD) {
-        // var.name = instr_mem.line.get()[2];
-        // var.data = mem.read_data(pid, var.name);
-
-        // rf_.reg(instr_mem.rd, var.data);
-
         var.name = code_line[2];
         var.data = mem.read(var.name);
 
         cpu.rf.reg(instr_mem_.rd, var.data);
     } else if (instr_mem_.opcode == ISA::Encoding::Opcode::STORE) {
-        // var.name = (*instr_wb.line)[1];
-        // var.data = rf_.reg(instr_mem.rs);
-
-        // mem.write_data(pid, var);
         var.name = code_line[1];
         var.data = cpu.rf.reg(instr_mem_.rs);
 
@@ -248,7 +214,7 @@ void Pipeline::mem_access()
 
 void Pipeline::write_back()
 {
-    if (instr_mem_.opcode == ISA::Encoding::Opcode::HALT) {
+    if (instr_wb_.opcode == ISA::Encoding::Opcode::HALT) {
         proc_->set_state(OS::PCB::State::TERMINATED);
     }
 }
@@ -262,11 +228,13 @@ void Pipeline::update_stages()
     instr_if_.code_line  = ISA::Code::NOP_LINE;
 }
 
-void Pipeline::print_log(std::ofstream& log)
+void Pipeline::set_proc(std::shared_ptr<OS::PCB> proc)
 {
-    OS::PCB::CPUState cpu = proc_->cpu_state;
-    cpu.rf.write_log(log);
+    proc_ = proc;
+}
 
+void Pipeline::print_log(std::ofstream& log) const
+{
     log << "PIPELINE\n";
 
     auto write_instr = [&log](const std::string& label, const HW::ISA::Encoding& instr)

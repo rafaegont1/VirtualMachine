@@ -11,10 +11,7 @@ namespace HW::CPU {
 
 class Pipeline {
 public:
-    void run(std::shared_ptr<OS::PCB> proc);
-    void set_proc(std::shared_ptr<OS::PCB> proc);
-    void print_log(std::ofstream& log);
-
+    // void run(std::shared_ptr<OS::PCB> proc);
     // pipeline stages
     void instr_fetch();
     void instr_decode();
@@ -24,6 +21,9 @@ public:
 
     // update pipeline instructions
     void update_stages();
+
+    void set_proc(std::shared_ptr<OS::PCB> proc);
+    void print_log(std::ofstream& log) const;
 
 private:
     union ALUResult {
@@ -35,6 +35,9 @@ private:
 
     // current process
     std::shared_ptr<OS::PCB> proc_;
+
+    // FIXME: arrumar uma maneira de salvar os estados dos estágios da pipeline
+    // no PCB (acho que só estas variáveis instr_*_ mesmo, não tenho ctz)
 
     // current instructions in pipeline
     HW::ISA::Encoding instr_if_;

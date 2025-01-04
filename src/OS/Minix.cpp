@@ -52,16 +52,20 @@ void Minix::schedule(const uint8_t core_id)
         do {
             auto begin = std::chrono::high_resolution_clock::now();
 
-            cpu_[core_id].run_cycle(proc); // TODO
+            cpu_[core_id].run_cycle(proc);
 
             auto end = std::chrono::high_resolution_clock::now();
             cpu_time += (end - begin);
-        } while ((proc->get_state() == OS::PCB::State::RUNNING)
-            && (cpu_time < proc->get_quantum()));
+        } while (proc->get_state() == OS::PCB::State::RUNNING
+            && (cpu_time < proc->get_quantum() || scheduler_.empty()));
 
         // update process timestamp
         OS::PCB::Time new_timestamp = proc->get_timestamp() + cpu_time;
         proc->set_timestamp(new_timestamp);
+
+        if (proc->get_state() != OS::PCB::State::TERMINATED) {
+            scheduler_.push(proc);
+        }
 
         // std::unique_lock<std::mutex> lock(mtx_);
         // cv_.wait(lock, [] { return !scheduler_.empty(); });
@@ -77,14 +81,14 @@ PCB::Time Minix::generate_random_quantum(uint8_t min, uint8_t max)
     return PCB::Time(distrib(gen));
 }
 
-bool Minix::are_cores_available() const
-{
-    for (const auto& core : cpu_) {
-        if (core.is_available()) {
-            return true;
-        }
-    }
-    return false;
-}
+// bool Minix::are_cores_available() const
+// {
+//     for (const auto& core : cpu_) {
+//         if (core.is_available()) {
+//             return true;
+//         }
+//     }
+//     return false;
+// }
 
 } // namespace OS

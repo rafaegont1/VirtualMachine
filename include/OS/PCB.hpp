@@ -29,6 +29,7 @@ public:
     };
 
     PCB(const std::string& file_name, const Time quantum);
+    virtual ~PCB();
 
     // setters and getters
     uint32_t get_pid() const;

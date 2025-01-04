@@ -23,7 +23,7 @@ public:
 private:
     PCB::Time generate_random_quantum(uint8_t min, uint8_t max);
     void schedule(const uint8_t core_id);
-    bool are_cores_available() const;
+    // bool are_cores_available() const;
 
     std::array<HW::CPU::Core, NUM_CORES> cpu_;
     std::array<std::thread, NUM_CORES> threads_;

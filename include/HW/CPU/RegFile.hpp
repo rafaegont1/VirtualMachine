@@ -58,7 +58,7 @@ public:
     void gpr(Registers& reg);
     const Registers& gpr() const;
 
-    void write_log(std::ofstream& log);
+    void print_log(std::ofstream& log) const;
 
 private:
     Registers gpr_; // General-Purpose Registers

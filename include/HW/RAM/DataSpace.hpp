@@ -17,7 +17,7 @@ public:
 
     void write(const Variable& var);
     int32_t read(const std::string& var_name);
-    void print_log(std::ofstream& log);
+    void print_log(std::ofstream& log) const;
 
 private:
     std::unordered_map<std::string, int32_t> data_;

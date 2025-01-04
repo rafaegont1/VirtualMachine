@@ -76,7 +76,7 @@ void RegFile::gpr(RegFile::Registers& reg) { gpr_ = reg; }
 
 const RegFile::Registers& RegFile::gpr() const { return gpr_; }
 
-void RegFile::write_log(std::ofstream& log)
+void RegFile::print_log(std::ofstream& log) const
 {
     log << "\nGENERAL-PURPOSE REGISTERS\n"
         << "$zero: " << gpr_[ZERO] << '\t'

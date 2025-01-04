@@ -20,7 +20,7 @@ int32_t DataSpace::read(const std::string& var_name)
     }
 }
 
-void DataSpace::print_log(std::ofstream& log)
+void DataSpace::print_log(std::ofstream& log) const
 {
     log << "\nMEMORY DATA\n";
 

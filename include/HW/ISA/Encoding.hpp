@@ -35,6 +35,8 @@ struct Encoding {
 
     static Opcode get_opcode(const std::string& mnemonic);
 
+    bool is_branch() const;
+
     std::reference_wrapper<const Code::Line> code_line = Code::NOP_LINE;
     Opcode opcode = Opcode::NOP;
     CPU::RegFile::Index rd = CPU::RegFile::Index::ZERO;

@@ -1,17 +1,34 @@
 #include "OS/PCB.hpp"
 
+#include <iostream>
+
 namespace OS {
 
 uint32_t PCB::count_ = 0;
 
 PCB::PCB(const std::string& file_name, const Time quantum) :
-    log{file_name + ".output"},
     pid_{++count_},
     state_{State::NEW},
     code_{file_name},
     quantum_{quantum},
     timestamp_{std::chrono::milliseconds(0)}
 {
+    const std::string log_name = "pid_" + std::to_string(pid_) + "_output.txt";
+
+    std::cout << "Log for file '" << file_name << "' for process with PID "
+              << pid_ << " will be saved in file: " << log_name << std::endl;
+
+    log.open(log_name);
+    if (!log.is_open()) {
+        throw std::runtime_error("failed to open log file " + log_name);
+    }
+}
+
+PCB::~PCB()
+{
+    if (log.is_open()) {
+        log.close();
+    }
 }
 
 uint32_t PCB::get_pid() const
