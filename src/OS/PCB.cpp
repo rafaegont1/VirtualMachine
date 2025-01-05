@@ -21,6 +21,11 @@ PCB::PCB(const std::string& file_name, const Time quantum) :
     if (!log.is_open()) {
         throw std::runtime_error("failed to open log file " + log_name);
     }
+
+    log << "--- Process info ---\n"
+        << "PID: "     << pid_             << '\n'
+        << "Quantum: " << quantum_.count() << " ms\n"
+        << "==============================================================\n";
 }
 
 PCB::~PCB()

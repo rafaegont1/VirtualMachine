@@ -17,7 +17,8 @@ std::shared_ptr<OS::PCB> FCFS::pop()
     std::lock_guard<std::mutex> guard(mtx_);
 
     if (queue_.empty()) {
-        throw std::out_of_range("Can't restore context; FCFS queue is empty");
+        return nullptr;
+        // throw std::out_of_range("Can't pop FCFS queue, it's empty");
     }
 
     std::shared_ptr<OS::PCB> proc = queue_.front();

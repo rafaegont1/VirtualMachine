@@ -16,7 +16,7 @@ void Minix::bootloader(int argc, char** argv)
 {
     for (int i = 1; i < argc; i++) {
         const std::string file_name = argv[i];
-        PCB::Time quantum = generate_random_quantum(10, 30);
+        PCB::Time quantum = generate_random_quantum(1, 5);
         std::shared_ptr<OS::PCB> proc =
             HW::RAM::Allocator::create_process(file_name, quantum);
 
@@ -38,25 +38,36 @@ void Minix::run()
 
 void Minix::schedule(const uint8_t core_id)
 {
-    while (!fcfs_.empty()) {
-        // context restore (restore state of process and cpu)
-        std::shared_ptr<OS::PCB> proc = fcfs_.pop();
-        OS::PCB::Time cpu_time = std::chrono::milliseconds(0);
+    std::shared_ptr<OS::PCB> proc;
+    OS::PCB::Time cpu_time;
+    OS::PCB::TimePoint begin, end;
 
+    while (!fcfs_.empty()) {
+        // Context restore (restore state of process and cpu)
+        // OPTIMIZE: Looks like even checking is fcfs queue isn't empty, the
+        // fcfs queue can pop a nullptr (like a process was popped from the fcfs
+        // queue between those two lines). Check if there is a better way to
+        // handle it than using this if-continue
+        proc = fcfs_.pop();
+        if (proc == nullptr) continue;
         proc->set_state(OS::PCB::State::RUNNING);
 
+        // Run process in CPU
+        cpu_time = std::chrono::milliseconds(0);
         do {
-            auto begin = std::chrono::high_resolution_clock::now();
-
+            begin = std::chrono::high_resolution_clock::now();
             cpu_[core_id].run_cycle(proc, timestamp_begin_);
-
-            auto end = std::chrono::high_resolution_clock::now();
+            end = std::chrono::high_resolution_clock::now();
             cpu_time += (end - begin);
         } while (proc->get_state() == OS::PCB::State::RUNNING
             && (cpu_time < proc->get_quantum() || fcfs_.empty()));
 
-        // context switch (save state of process and cpu)
+        // Context switch (save state of process and cpu)
         if (proc->get_state() != OS::PCB::State::TERMINATED) {
+            proc->log << "Quantum expired!\n"
+                      << "Time spent in CPU: " << cpu_time.count() << " ms\n"
+                      << "Context switching...\n"
+                      << "==============================================================\n";
             proc->set_state(OS::PCB::State::READY);
             fcfs_.push(proc);
         }
