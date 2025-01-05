@@ -7,8 +7,8 @@ project(minix)
 # Generate symbols for IDE indexer
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Set default C++ standard to C++20
-set(CMAKE_CXX_STANDARD 20)
+# Set default C++ standard to C++17
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 # Add compiler options for GNU/Clang
@@ -27,7 +27,7 @@ set(SOURCES
     src/HW/CPU/Pipeline.cpp
     src/HW/CPU/Core.cpp
     src/main.cpp
-    src/OS/Scheduler.cpp
+    src/OS/FCFS.cpp
     src/OS/Minix.cpp
     src/OS/PCB.cpp
 )

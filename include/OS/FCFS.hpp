@@ -8,14 +8,14 @@
 
 namespace OS {
 
-class Scheduler {
+class FCFS {
 public:
     void push(std::shared_ptr<OS::PCB> proc);
     std::shared_ptr<OS::PCB> pop();
     bool empty() const;
 
 private:
-    std::queue<std::shared_ptr<OS::PCB>> fcfs;
+    std::queue<std::shared_ptr<OS::PCB>> queue_;
     std::mutex mtx_;
 };
 

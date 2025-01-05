@@ -4,7 +4,7 @@
 #include <array>
 #include <thread>
 #include "HW/CPU/Core.hpp"
-#include "OS/Scheduler.hpp"
+#include "OS/FCFS.hpp"
 
 namespace OS {
 
@@ -25,7 +25,7 @@ private:
 
     std::array<HW::CPU::Core, NUM_CORES> cpu_;
     std::array<std::thread, NUM_CORES> threads_;
-    OS::Scheduler scheduler_;
+    OS::FCFS fcfs_;
 };
 
 } // namespace OS

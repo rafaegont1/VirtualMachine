@@ -21,7 +21,7 @@ void Minix::bootloader(int argc, char** argv)
             HW::RAM::Allocator::create_process(file_name, quantum);
 
         proc->set_state(OS::PCB::State::READY);
-        scheduler_.push(proc);
+        fcfs_.push(proc);
     }
 }
 
@@ -38,9 +38,9 @@ void Minix::run()
 
 void Minix::schedule(const uint8_t core_id)
 {
-    while (!scheduler_.empty()) {
+    while (!fcfs_.empty()) {
         // context restore (restore state of process and cpu)
-        std::shared_ptr<OS::PCB> proc = scheduler_.pop();
+        std::shared_ptr<OS::PCB> proc = fcfs_.pop();
         OS::PCB::Time cpu_time = std::chrono::milliseconds(0);
 
         proc->set_state(OS::PCB::State::RUNNING);
@@ -53,12 +53,12 @@ void Minix::schedule(const uint8_t core_id)
             auto end = std::chrono::high_resolution_clock::now();
             cpu_time += (end - begin);
         } while (proc->get_state() == OS::PCB::State::RUNNING
-            && (cpu_time < proc->get_quantum() || scheduler_.empty()));
+            && (cpu_time < proc->get_quantum() || fcfs_.empty()));
 
         // context switch (save state of process and cpu)
         if (proc->get_state() != OS::PCB::State::TERMINATED) {
             proc->set_state(OS::PCB::State::READY);
-            scheduler_.push(proc);
+            fcfs_.push(proc);
         }
     }
 }

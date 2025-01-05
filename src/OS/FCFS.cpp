@@ -1,34 +1,34 @@
-#include "OS/Scheduler.hpp"
+#include "OS/FCFS.hpp"
 
 #include <stdexcept>
 
 namespace OS {
 
-void Scheduler::push(std::shared_ptr<OS::PCB> proc)
+void FCFS::push(std::shared_ptr<OS::PCB> proc)
 {
     std::lock_guard<std::mutex> guard(mtx_);
 
     proc->set_state(PCB::State::READY);
-    fcfs.push(proc);
+    queue_.push(proc);
 }
 
-std::shared_ptr<OS::PCB> Scheduler::pop()
+std::shared_ptr<OS::PCB> FCFS::pop()
 {
     std::lock_guard<std::mutex> guard(mtx_);
 
-    if (fcfs.empty()) {
+    if (queue_.empty()) {
         throw std::out_of_range("Can't restore context; FCFS queue is empty");
     }
 
-    std::shared_ptr<OS::PCB> proc = fcfs.front();
-    fcfs.pop();
+    std::shared_ptr<OS::PCB> proc = queue_.front();
+    queue_.pop();
 
     return proc;
 }
 
-bool Scheduler::empty() const
+bool FCFS::empty() const
 {
-    return fcfs.empty();
+    return queue_.empty();
 }
 
 } // namespace OS

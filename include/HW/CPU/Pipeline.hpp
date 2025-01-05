@@ -1,6 +1,7 @@
 #ifndef PIPELINE_HPP_
 #define PIPELINE_HPP_
 
+#include <memory>
 #include "OS/PCB.hpp"
 
 namespace HW::CPU {
