@@ -1,7 +1,8 @@
 li   $t1 100
 li   $t2 100
 beq  $t1 $t2 6
-sub  $t7 $v1 $v2
+sub  $t7 $v0 $v1
 jump 7
 add  $t3 $t1 $t2
 nop
+halt

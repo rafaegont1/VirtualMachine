@@ -1,16 +1,14 @@
 #include <iostream>
-#include "VirtualMachine.hpp"
+#include "OS/Minix.hpp"
 
-int main(int argc, char* argv[])
+int main(int argc, char** argv)
 {
     if (argc < 2) {
-        std::cerr << "Uso: " << argv[0] << " <nome_do_programa>" << std::endl;
-        return 1;
+        std::cerr << "usage: " << argv[0] << " <program_name>" << std::endl;
+        exit(EXIT_FAILURE);
     }
 
-    VirtualMachine vm("log.txt");
-
-    vm.create_proc(argv[1]);
+    OS::Minix vm(argc, argv);
     vm.run();
 
     return 0;

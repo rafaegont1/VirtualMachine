@@ -1,2 +1,3 @@
 add   $t3 $t1 $t2
 store A   $t3
+halt

@@ -2,3 +2,4 @@ add  $a3 $a1 $a2
 sub  $t3 $t1 $t2
 mult $t7 $t5 $t6
 div  $s3 $s1 $s2
+halt
