@@ -110,9 +110,4 @@ OS::PCB::Time PCB::get_waiting_time()
     return waiting_time_;
 }
 
-
-bool PCB::PriorityComparator::operator()(const PCB& p1, const PCB& p2) {
-    return p1.get_priority() < p2.get_priority();
-}
-
 } // namespace OS

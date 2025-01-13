@@ -44,11 +44,6 @@ public:
 
     const HW::ISA::Code::Line& fetch_line(const uint32_t pc) const;
 
-    class PriorityComparator {
-    public:
-        bool operator()(const PCB& p1, const PCB& p2);
-    };
-
     HW::CPU::CPUState cpu_state;
     HW::RAM::DataSpace mem;
     std::ofstream log;

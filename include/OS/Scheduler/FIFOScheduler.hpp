@@ -1,18 +1,18 @@
 #ifndef FCFS_HPP
 #define FCFS_HPP
 
-#include <memory>
 #include <queue>
+#include <memory>
 #include "OS/Scheduler/SchedulerBase.hpp"
 #include "OS/PCB.hpp"
 
 namespace OS {
 
-class FIFO : SchedulerBase {
+class FIFOScheduler : SchedulerBase {
 public:
-    void push(std::shared_ptr<OS::PCB> proc);
-    std::shared_ptr<OS::PCB> pop();
-    bool empty();
+    void push(std::shared_ptr<OS::PCB> proc) override;
+    std::shared_ptr<OS::PCB> pop() override;
+    bool empty() override;
 
 private:
     std::queue<std::shared_ptr<OS::PCB>> queue_;

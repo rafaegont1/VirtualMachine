@@ -1,0 +1,4 @@
+li   $t3 500
+dec  $t3
+bgtz $t3 2
+halt

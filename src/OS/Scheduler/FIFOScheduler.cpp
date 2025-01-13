@@ -1,15 +1,15 @@
-#include "OS/Scheduler/FIFO.hpp"
+#include "OS/Scheduler/FIFOScheduler.hpp"
 
 namespace OS {
 
-void FIFO::push(std::shared_ptr<OS::PCB> proc)
+void FIFOScheduler::push(std::shared_ptr<OS::PCB> proc)
 {
     std::lock_guard<std::mutex> guard(mtx_);
 
     queue_.push(proc);
 }
 
-std::shared_ptr<OS::PCB> FIFO::pop()
+std::shared_ptr<OS::PCB> FIFOScheduler::pop()
 {
     std::lock_guard<std::mutex> guard(mtx_);
 
@@ -23,7 +23,7 @@ std::shared_ptr<OS::PCB> FIFO::pop()
     return proc;
 }
 
-bool FIFO::empty()
+bool FIFOScheduler::empty()
 {
     std::lock_guard<std::mutex> guard(mtx_);
     return queue_.empty();

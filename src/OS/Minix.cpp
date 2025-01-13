@@ -58,7 +58,7 @@ void Minix::schedule(const uint8_t core_id)
             end = std::chrono::high_resolution_clock::now();
             cpu_time += (end - begin);
 
-#if defined(PREEMPTIVE)
+#if PREEMPTIVE
             if ((cpu_time > proc->get_quantum()) && !scheduler_.empty()) break;
 #endif
         } while (proc->get_state() == OS::PCB::State::RUNNING);
@@ -101,7 +101,7 @@ void Minix::context_switch(std::shared_ptr<OS::PCB> proc)
 
         procs_executed_++;
     } else {
-#if defined(PREEMPTIVE)
+#if PREEMPTIVE
         proc->log << "Quantum expired!\n"
                   << "Timestamp: " << timestamp().count() << " ms\n"
                   << "Context switching...\n"
