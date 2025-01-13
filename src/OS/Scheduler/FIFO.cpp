@@ -1,24 +1,20 @@
-#include "OS/FCFS.hpp"
-
-#include <stdexcept>
+#include "OS/Scheduler/FIFO.hpp"
 
 namespace OS {
 
-void FCFS::push(std::shared_ptr<OS::PCB> proc)
+void FIFO::push(std::shared_ptr<OS::PCB> proc)
 {
     std::lock_guard<std::mutex> guard(mtx_);
 
-    proc->set_state(PCB::State::READY);
     queue_.push(proc);
 }
 
-std::shared_ptr<OS::PCB> FCFS::pop()
+std::shared_ptr<OS::PCB> FIFO::pop()
 {
     std::lock_guard<std::mutex> guard(mtx_);
 
     if (queue_.empty()) {
         return nullptr;
-        // throw std::out_of_range("Can't pop FCFS queue, it's empty");
     }
 
     std::shared_ptr<OS::PCB> proc = queue_.front();
@@ -27,8 +23,9 @@ std::shared_ptr<OS::PCB> FCFS::pop()
     return proc;
 }
 
-bool FCFS::empty() const
+bool FIFO::empty()
 {
+    std::lock_guard<std::mutex> guard(mtx_);
     return queue_.empty();
 }
 

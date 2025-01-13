@@ -1,24 +1,23 @@
-#ifndef SCHEDULER_HPP
-#define SCHEDULER_HPP
+#ifndef FCFS_HPP
+#define FCFS_HPP
 
 #include <memory>
 #include <queue>
-#include <mutex>
+#include "OS/Scheduler/SchedulerBase.hpp"
 #include "OS/PCB.hpp"
 
 namespace OS {
 
-class FCFS {
+class FIFO : SchedulerBase {
 public:
     void push(std::shared_ptr<OS::PCB> proc);
     std::shared_ptr<OS::PCB> pop();
-    bool empty() const;
+    bool empty();
 
 private:
     std::queue<std::shared_ptr<OS::PCB>> queue_;
-    std::mutex mtx_;
 };
 
 } // namespace OS
 
-#endif // SCHEDULER_HPP
+#endif // FCFS_HPP

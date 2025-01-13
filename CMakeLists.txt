@@ -16,6 +16,16 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
+# Define PREEMPTIVE as true or false
+option(PREEMPTIVE "Enable preemptive behavior" ON)
+
+# Pass definition to compiler
+if(PREEMPTIVE)
+    add_compile_definitions(PREEMPTIVE=1)
+else()
+    add_compile_definitions(PREEMPTIVE=0)
+endif()
+
 # Set source files
 set(SOURCES
     src/HW/ISA/Code.cpp
@@ -27,7 +37,7 @@ set(SOURCES
     src/HW/CPU/Pipeline.cpp
     src/HW/CPU/Core.cpp
     src/main.cpp
-    src/OS/FCFS.cpp
+    src/OS/Scheduler/FIFO.cpp
     src/OS/Minix.cpp
     src/OS/PCB.cpp
 )

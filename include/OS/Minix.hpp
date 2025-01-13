@@ -4,7 +4,7 @@
 #include <array>
 #include <thread>
 #include "HW/CPU/Core.hpp"
-#include "OS/FCFS.hpp"
+#include "OS/Scheduler/FIFO.hpp"
 
 namespace OS {
 
@@ -18,14 +18,18 @@ public:
     void run();
 
 private:
-    PCB::Time generate_random_quantum(uint8_t min, uint8_t max);
+    uint32_t random_number(uint32_t min, uint32_t max);
     void schedule(const uint8_t core_id);
+    std::shared_ptr<OS::PCB> context_restore();
+    void context_switch(std::shared_ptr<OS::PCB> proc);
+    OS::PCB::Time timestamp();
 
     PCB::TimePoint timestamp_begin_;
+    uint32_t procs_executed_ = 0;
 
     std::array<HW::CPU::Core, NUM_CORES> cpu_;
     std::array<std::thread, NUM_CORES> threads_;
-    OS::FCFS fcfs_;
+    OS::FIFO scheduler_;
 };
 
 } // namespace OS
