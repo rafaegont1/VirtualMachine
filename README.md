@@ -13,7 +13,7 @@ O processador MIPS desta máquina virtual apresenta cinco estágios:
 * Instruction Decode (ID): decodifica as instruções para branchs, jumps, operações na ULA, etc.;
 * Execute (EX): executa as instruções decodificadas;
 * Memory Access (MEM): busca ou escreve dados na memória principal;
-* Write Back (WB): verifica se o programa terminou;
+* Write Back (WB): verifica se o programa terminou.
 
 ## Conjunto de instruções
 
@@ -90,10 +90,10 @@ A máquina virtual disponibilizada possui um arquivo CMake que realiza todo o pr
 > [!IMPORTANT]
 > Os programas estão salvos na pasta `example`, e devem ser utilizadas como argumento do executável da máquina virtual
 
-| Comando                                                         | Função                                                                                           |
-| --------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `mkdir build`                                                   | Cria uma nova pasta chamada `build` para a compilação.                                           |
-| `cd build`                                                      | Navega até a pasta `build`.                                                                      |
-| `cmake ..`                                                      | Configura o projeto utilizando CMake, buscando o `CMakeLists.txt` no diretório anterior.         |
-| `make`                                                          | Executa a compilação do programa utilizando o GCC, com o resultado na pasta `build`.             |
-| `./minix ../examples/add_and_store.txt ../examples/if_else.txt` | Executa os programas `add_and_store.txt` e `if_else` na máquina virtual.                         |
+| Comando                                                                                                                           | Função                                                                                           |
+| --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `mkdir build`                                                                                                                     | Cria uma nova pasta chamada `build` para a compilação.                                           |
+| `cd build`                                                                                                                        | Navega até a pasta `build`.                                                                      |
+| `cmake ..`                                                                                                                        | Configura o projeto utilizando CMake, buscando o `CMakeLists.txt` no diretório anterior.         |
+| `make`                                                                                                                            | Executa a compilação do programa utilizando o GCC, com o resultado na pasta `build`.             |
+| `./minix ../examples/loop100.txt ../examples/loop100.txt ../examples/loop100.txt ../examples/loop100.txt ../examples/loop100.txt` | Executa os programas `add_and_store.txt` e `if_else` na máquina virtual.                         |

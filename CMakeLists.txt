@@ -1,7 +1,7 @@
-# Set the cmake minimum version
+# Set the minimum required CMake version
 cmake_minimum_required(VERSION 3.5)
 
-# Define the project name
+# Define the project name and version
 project(minix)
 
 # Generate symbols for IDE indexer
@@ -16,6 +16,27 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
+# Define PREEMPTIVE as true or false
+option(PREEMPTIVE "Enable preemptive behavior" ON)
+
+# Pass the PREEMPTIVE definition to the compiler
+if(PREEMPTIVE)
+    add_compile_definitions(PREEMPTIVE=1)
+else()
+    add_compile_definitions(PREEMPTIVE=0)
+endif()
+
+# Define the scheduler type
+set(SCHEDULER "FIFO" CACHE STRING "Choose scheduler type (FIFO or PRIORITY_QUEUE)")
+
+# Validate the scheduler type
+if(NOT SCHEDULER MATCHES "^(FIFO|PRIORITY_QUEUE)$")
+    message(FATAL_ERROR "Invalid SCHEDULER type. Choose FIFO or PRIORITY_QUEUE.")
+endif()
+
+# Pass the scheduler type definition to the compiler
+add_compile_definitions(${SCHEDULER})
+
 # Set source files
 set(SOURCES
     src/HW/ISA/Code.cpp
@@ -27,7 +48,8 @@ set(SOURCES
     src/HW/CPU/Pipeline.cpp
     src/HW/CPU/Core.cpp
     src/main.cpp
-    src/OS/FCFS.cpp
+    src/OS/Scheduler/FIFOScheduler.cpp
+    src/OS/Scheduler/PriorityQueue.cpp
     src/OS/Minix.cpp
     src/OS/PCB.cpp
 )
@@ -35,5 +57,12 @@ set(SOURCES
 # Create the executable target
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-# Add all header files under the include directory to target
+target_link_libraries(${PROJECT_NAME} pthread)
+
+# Add include directories
 target_include_directories(${PROJECT_NAME} PRIVATE include)
+
+# Print configuration information
+message(STATUS "Building project: ${PROJECT_NAME}")
+message(STATUS "Scheduler type: ${SCHEDULER}")
+message(STATUS "Preemptive scheduling: ${PREEMPTIVE}")

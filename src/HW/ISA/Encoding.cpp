@@ -27,14 +27,15 @@ Encoding::Opcode Encoding::get_opcode(const std::string& mnemonic)
         {"halt",  Opcode::HALT }
     };
 
-    auto iter = opcode_map.find(mnemonic);
-    if (iter == opcode_map.end()) {
-        throw std::runtime_error(
-            "opcode for mnemonic '" + mnemonic + "' not found"
-        );
-    }
+    // auto iter = opcode_map.find(mnemonic);
+    // if (iter == opcode_map.end()) {
+    //     throw std::runtime_error(
+    //         "opcode for mnemonic '" + mnemonic + "' not found"
+    //     );
+    // }
 
-    return iter->second;
+    // return iter->second;
+    return opcode_map.at(mnemonic);
 }
 
 bool Encoding::is_jump_or_branch() const

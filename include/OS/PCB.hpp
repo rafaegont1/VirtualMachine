@@ -23,7 +23,7 @@ public:
         TERMINATED
     };
 
-    PCB(const std::string& file_name, const Time quantum);
+    PCB(const std::string& file_name, PCB::Time timestamp, Time quantum, uint8_t priority = 0);
     virtual ~PCB();
 
     // setters and getters
@@ -32,10 +32,17 @@ public:
     void set_state(PCB::State new_value);
     void set_quantum(Time new_value);
     Time get_quantum() const;
+    uint8_t get_priority() const;
+
+    OS::PCB::Time get_arrival_time();
+    void update_burst_time(OS::PCB::Time cpu_time);
+    OS::PCB::Time get_burst_time();
+    void set_response_time(OS::PCB::Time timestamp);
+    OS::PCB::Time get_response_time();
+    void update_waiting_time(OS::PCB::Time timestamp);
+    OS::PCB::Time get_waiting_time();
 
     const HW::ISA::Code::Line& fetch_line(const uint32_t pc) const;
-
-    Time cpu_time() const;
 
     HW::CPU::CPUState cpu_state;
     HW::RAM::DataSpace mem;
@@ -45,10 +52,27 @@ private:
     static uint32_t count_;
 
     uint32_t pid_;
+    uint16_t priority_;
     State state_;
     HW::ISA::Code code_;
 
+    // • Arrival time: the time when a process enters into the ready state and
+    //   is ready for its execution.
+    //
+    // • Burst time: total time taken by the process for its execution on the
+    //   CPU.
+    //
+    // • Response time: time spent when the process is in the ready state and
+    //   gets the CPU for the first time.
+    //
+    // • Waiting time: total time spent by the process in the ready state
+    //   waiting for CPU.
+
     Time quantum_;
+    Time arrival_time_;
+    Time response_time_;
+    Time burst_time_ = std::chrono::milliseconds(0);
+    Time waiting_time_;
 };
 
 } // namespace OS
