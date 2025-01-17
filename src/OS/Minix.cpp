@@ -18,8 +18,9 @@ void Minix::bootloader(int argc, char** argv)
     for (int i = 1; i < argc; i++) {
         const std::string file_name = argv[i];
         PCB::Time quantum = OS::PCB::Time(random_number(1, 5));
+        uint16_t priority = random_number(0, 2);
         std::shared_ptr<OS::PCB> proc =
-            HW::RAM::Allocator::create_process(file_name, timestamp(), quantum);
+            HW::RAM::Allocator::create_process(file_name, timestamp(), quantum, priority);
         scheduler_.push(proc);
     }
 }
@@ -58,9 +59,9 @@ void Minix::schedule(const uint8_t core_id)
             end = std::chrono::high_resolution_clock::now();
             cpu_time += (end - begin);
 
-#if PREEMPTIVE
+#ifdef PREEMPTIVE
             if ((cpu_time > proc->get_quantum()) && !scheduler_.empty()) break;
-#endif
+#endif // PREEMPTIVE
         } while (proc->get_state() == OS::PCB::State::RUNNING);
 
         proc->update_burst_time(cpu_time);
@@ -101,7 +102,7 @@ void Minix::context_switch(std::shared_ptr<OS::PCB> proc)
 
         procs_executed_++;
     } else {
-#if PREEMPTIVE
+#ifdef PREEMPTIVE
         proc->log << "Quantum expired!\n"
                   << "Timestamp: " << timestamp().count() << " ms\n"
                   << "Context switching...\n"
@@ -109,7 +110,7 @@ void Minix::context_switch(std::shared_ptr<OS::PCB> proc)
 
         proc->set_state(OS::PCB::State::READY);
         scheduler_.push(proc);
-#endif
+#endif // PREEMPTIVE
     }
 }
 

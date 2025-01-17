@@ -33,7 +33,7 @@ private:
 #if defined(FIFO)
     OS::FIFOScheduler scheduler_;
 #elif defined(PRIORITY_QUEUE)
-    OS::PrioPriorityQueue scheduler_;
+    OS::PriorityQueue scheduler_;
 #endif
 };
 

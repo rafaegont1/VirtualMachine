@@ -13,7 +13,7 @@ O processador MIPS desta máquina virtual apresenta cinco estágios:
 * Instruction Decode (ID): decodifica as instruções para branchs, jumps, operações na ULA, etc.;
 * Execute (EX): executa as instruções decodificadas;
 * Memory Access (MEM): busca ou escreve dados na memória principal;
-* Write Back (WB): verifica se o programa terminou;
+* Write Back (WB): verifica se o programa terminou.
 
 ## Conjunto de instruções
 

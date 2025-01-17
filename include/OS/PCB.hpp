@@ -52,7 +52,7 @@ private:
     static uint32_t count_;
 
     uint32_t pid_;
-    uint8_t priority_;
+    uint16_t priority_;
     State state_;
     HW::ISA::Code code_;
 
