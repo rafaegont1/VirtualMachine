@@ -47,6 +47,7 @@ set(SOURCES
     src/HW/CPU/ALU.cpp
     src/HW/CPU/Pipeline.cpp
     src/HW/CPU/Core.cpp
+    src/HW/CPU/Cache.cpp
     src/main.cpp
     src/OS/Scheduler/FIFOScheduler.cpp
     src/OS/Scheduler/PriorityQueue.cpp

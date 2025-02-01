@@ -4,8 +4,11 @@
 #include <array>
 #include <thread>
 #include "HW/CPU/Core.hpp"
+#if defined(FIFO)
 #include "OS/Scheduler/FIFOScheduler.hpp"
+#elif defined(PRIORITY_QUEUE)
 #include "OS/Scheduler/PriorityQueue.hpp"
+#endif
 
 namespace OS {
 
@@ -30,6 +33,7 @@ private:
 
     std::array<HW::CPU::Core, NUM_CORES> cpu_;
     std::array<std::thread, NUM_CORES> threads_;
+    HW::CPU::Cache cache_;
 #if defined(FIFO)
     OS::FIFOScheduler scheduler_;
 #elif defined(PRIORITY_QUEUE)

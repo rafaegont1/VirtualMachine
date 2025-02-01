@@ -7,8 +7,11 @@
 
 namespace OS {
 
+constexpr uint32_t CACHE_SIZE = 5;
+
 Minix::Minix(int argc, char** argv) :
-    timestamp_begin_(std::chrono::high_resolution_clock::now())
+    timestamp_begin_(std::chrono::high_resolution_clock::now()),
+    cache_(CACHE_SIZE)
 {
     bootloader(argc, argv);
 }
@@ -55,7 +58,7 @@ void Minix::schedule(const uint8_t core_id)
         cpu_time = std::chrono::milliseconds(0);
         do {
             begin = std::chrono::high_resolution_clock::now();
-            cpu_[core_id].run_cycle(proc, timestamp_begin_);
+            cpu_[core_id].run_cycle(proc, cache_, timestamp_begin_);
             end = std::chrono::high_resolution_clock::now();
             cpu_time += (end - begin);
 

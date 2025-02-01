@@ -2,4 +2,7 @@ addi $t0 2 2
 addi $t1 9 2
 addi $t2 3 8
 addi $t3 1 32
+addi $t4 3 8
+addi $t5 3 8
+addi $t6 3 8
 halt

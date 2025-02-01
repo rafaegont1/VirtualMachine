@@ -11,7 +11,7 @@ class Core {
 public:
     Core();
 
-    void run_cycle(std::shared_ptr<OS::PCB> proc, OS::PCB::TimePoint timestamp_begin);
+    void run_cycle(std::shared_ptr<OS::PCB> proc, Cache& cache, OS::PCB::TimePoint timestamp_begin);
 
 private:
     static uint32_t count;

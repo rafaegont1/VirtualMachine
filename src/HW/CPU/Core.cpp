@@ -12,7 +12,7 @@ Core::Core() : id_{count++}
 {
 }
 
-void Core::run_cycle(std::shared_ptr<OS::PCB> proc, OS::PCB::TimePoint timestamp_begin)
+void Core::run_cycle(std::shared_ptr<OS::PCB> proc, Cache& cache, OS::PCB::TimePoint timestamp_begin)
 {
     pipeline_.set_proc(proc);
 
@@ -23,9 +23,9 @@ void Core::run_cycle(std::shared_ptr<OS::PCB> proc, OS::PCB::TimePoint timestamp
               << "Timestamp: " << timestamp.count() << " ms\n";
 
     // run pipeline stages
-    pipeline_.instr_fetch();
+    pipeline_.instr_fetch(cache);
     pipeline_.instr_decode();
-    pipeline_.execute();
+    pipeline_.execute(cache);
     pipeline_.mem_access();
     pipeline_.write_back();
 

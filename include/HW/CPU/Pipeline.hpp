@@ -3,15 +3,16 @@
 
 #include <memory>
 #include "OS/PCB.hpp"
+#include "HW/CPU/Cache.hpp"
 
 namespace HW::CPU {
 
 class Pipeline {
 public:
     // pipeline stages
-    void instr_fetch();
+    void instr_fetch(Cache& cache);
     void instr_decode();
-    void execute();
+    void execute(Cache& cache);
     void mem_access();
     void write_back();
 
@@ -29,6 +30,7 @@ private:
 
     // current process
     std::shared_ptr<OS::PCB> proc_;
+    bool cache_used_ = false;
 };
 
 } // namespace HW::CPU

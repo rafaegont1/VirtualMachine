@@ -7,7 +7,7 @@
 
 namespace HW::CPU {
 
-void Pipeline::instr_fetch()
+void Pipeline::instr_fetch(Cache& cache)
 {
     HW::CPU::CPUState& cpu = proc_->cpu_state;
 
@@ -15,13 +15,42 @@ void Pipeline::instr_fetch()
         cpu.pipeline.if_enc.code_line = HW::ISA::Code::NOP_LINE;
         cpu.pipeline.stall_count_--;
     } else {
-        cpu.pipeline.if_enc.code_line = proc_->fetch_line(cpu.pc++);
+        while (true) {
+            cpu.pipeline.if_enc.code_line = proc_->fetch_line(cpu.pc++);
+            auto code_line = cpu.pipeline.if_enc.code_line.get();
+            cpu.pipeline.if_enc.opcode = ISA::Encoding::get_opcode(code_line[0]);
+            std::optional<int32_t> cache_value;
+
+            switch (cpu.pipeline.if_enc.opcode) {
+                case ISA::Encoding::Opcode::ADDI:
+                case ISA::Encoding::Opcode::SUBI:
+                case ISA::Encoding::Opcode::MULI:
+                case ISA::Encoding::Opcode::DIVI:
+                    cache_value =
+                        cache.read(code_line[0] + code_line[2] + code_line[3]);
+                    break;
+
+                // case ISA::Encoding::Opcode::LI:
+                // case ISA::Encoding::Opcode::LW:
+                //     cache.read(code_line[0] + code_line[2]);
+                //     break;
+
+                default:
+                    break;
+            }
+
+            if (cache_value.has_value()) {
+                RegFile::Index rd = RegFile::reg_index(code_line[1]);
+                cpu.rf.reg(rd, cache_value.value());
+                cache_used_ = true;
+            } else {
+                break;
+            }
+        }
 
         // HACK: it's preferable to get the opcode of the instruction in ID
         // stage, but we need to know it to put stalls so the branch or jump is
         // evaluated before any other instruction is fetched
-        auto code_line = cpu.pipeline.if_enc.code_line.get();
-        cpu.pipeline.if_enc.opcode = ISA::Encoding::get_opcode(code_line[0]);
         if (cpu.pipeline.if_enc.is_jump_or_branch()) {
             cpu.pipeline.stall_count_ += 2;
         }
@@ -99,7 +128,7 @@ void Pipeline::instr_decode()
     }
 }
 
-void Pipeline::execute()
+void Pipeline::execute(Cache& cache)
 {
     HW::CPU::CPUState& cpu = proc_->cpu_state;
 
@@ -109,6 +138,7 @@ void Pipeline::execute()
     int32_t rd_data = cpu.rf.reg(cpu.pipeline.ex_enc.rd);
     int32_t rs_data = cpu.rf.reg(cpu.pipeline.ex_enc.rs);
     int32_t rt_data = cpu.rf.reg(cpu.pipeline.ex_enc.rt);
+    auto code_line = cpu.pipeline.ex_enc.code_line.get();
 
     switch (cpu.pipeline.ex_enc.opcode) {
         case ISA::Encoding::Opcode::NOP:
@@ -140,6 +170,7 @@ void Pipeline::execute()
                 cpu.pipeline.ex_enc.imm2
             );
             cpu.rf.reg(cpu.pipeline.ex_enc.rd, alu_res.as_num);
+            cache.write(code_line[0] + code_line[2] + code_line[3], alu_res.as_num);
             break;
 
         case ISA::Encoding::Opcode::SUBI:
@@ -148,6 +179,7 @@ void Pipeline::execute()
                 cpu.pipeline.ex_enc.imm2
             );
             cpu.rf.reg(cpu.pipeline.ex_enc.rd, alu_res.as_num);
+            cache.write(code_line[0] + code_line[2] + code_line[3], alu_res.as_num);
             break;
 
         case ISA::Encoding::Opcode::MULI:
@@ -156,6 +188,7 @@ void Pipeline::execute()
                 cpu.pipeline.ex_enc.imm2
             );
             cpu.rf.reg(cpu.pipeline.ex_enc.rd, alu_res.as_num);
+            cache.write(code_line[0] + code_line[2] + code_line[3], alu_res.as_num);
             break;
 
         case ISA::Encoding::Opcode::DIVI:
@@ -164,6 +197,7 @@ void Pipeline::execute()
                 cpu.pipeline.ex_enc.imm2
             );
             cpu.rf.reg(cpu.pipeline.ex_enc.rd, alu_res.as_num);
+            cache.write(code_line[0] + code_line[2] + code_line[3], alu_res.as_num);
             break;
 
         case ISA::Encoding::Opcode::LI:
@@ -275,6 +309,8 @@ void Pipeline::update_stages()
     cpu.pipeline.ex_enc  = std::move(cpu.pipeline.id_enc);
     cpu.pipeline.id_enc  = std::move(cpu.pipeline.if_enc);
     cpu.pipeline.if_enc.code_line  = ISA::Code::NOP_LINE;
+
+    cache_used_ = false;
 }
 
 void Pipeline::set_proc(std::shared_ptr<OS::PCB> proc)
@@ -302,6 +338,10 @@ void Pipeline::print_log(std::ofstream& log) const
     write_instr("EX:", cpu.pipeline.ex_enc);
     write_instr("MEM:", cpu.pipeline.mem_enc);
     write_instr("WB:", cpu.pipeline.wb_enc);
+
+    if (cache_used_) {
+        log << "\nOne or more instructions used cache\n";
+    }
 }
 
 } // namespace HW::CPU
