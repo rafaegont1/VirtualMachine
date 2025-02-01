@@ -1,0 +1,5 @@
+addi $t0 2 2
+addi $t1 9 2
+addi $t2 3 8
+addi $t3 1 32
+halt

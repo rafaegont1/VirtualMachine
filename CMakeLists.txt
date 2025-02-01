@@ -1,7 +1,7 @@
 # Set the minimum required CMake version
 cmake_minimum_required(VERSION 3.5)
 
-# Define the project name and version
+# Define the project name
 project(minix)
 
 # Generate symbols for IDE indexer

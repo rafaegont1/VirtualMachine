@@ -19,26 +19,30 @@ O processador MIPS desta máquina virtual apresenta cinco estágios:
 
 Com isso, foi implementado um subconjunto de instruções da arquitetura MIPS, além de algumas outras instruções para tornar a linguagem de montagem o mais simples possível. Segue abaixo as instruções implementadas:
 
-| Instrução   | Descrição                                                                                             |
-|-------------|-------------------------------------------------------------------------------------------------------|
-| `nop`       | "No operation", representa a ausência de uma instrução na pipeline.                                   |
-| `add`       | Realiza adição: _add rd rs rt_, onde _rd_ é o registrador de destino e _rs_, _rt_ são os operandos.   |
-| `sub`       | Realiza subtração: _sub rd rs rt_, com a mesma lógica do `add`.                                       |
-| `mult`      | Realiza multiplicação: _mult rd rs rt_.                                                               |
-| `div`       | Realiza divisão: _div rd rs rt_.                                                                      |
-| `li`        | "Load immediate", carrega uma constante: _li rd imm_, onde _imm_ é carregado no registrador _rd_.     |
-| `inc`       | Incrementa: _inc rd_, onde _rd_ é o registrador a ser incrementado.                                   |
-| `dec`       | Decrementa: _dec rd_, onde _rd_ é o registrador a ser decrementado.                                   |
-| `jump`      | Salta para uma instrução específica: _jump imm_, onde _imm_ indica a linha da próxima instrução.      |
-| `beq`       | "Branch on equal": _beq rs rt imm_, salta para _imm_ se _rs_ for igual a _rt_.                        |
-| `bnq`       | "Branch on not equal": _bnq rs rt imm_, salta para _imm_ se _rs_ for diferente de _rt_.               |
-| `bgez`      | "Branch on greater or equal to zero": _bgez rs imm_, salta para _imm_ se _rs_ >= 0.                   |
-| `bgtz`      | "Branch on greater than zero": _bgtz rs imm_, salta para _imm_ se _rs_ > 0.                           |
-| `blez`      | "Branch on less or equal to zero": _blez rs imm_, salta para _imm_ se _rs_ <= 0.                      |
-| `bltz`      | "Branch on less than zero": _bltz rs imm_, salta para _imm_ se _rs_ < 0.                              |
-| `load`      | Lê da memória: _load rd var_, onde _var_ é uma variável e _rd_ é o registrador de destino.            |
-| `store`     | Escreve na memória: _store var rs_, onde _var_ é a variável e _rs_ é o registrador de origem.         |
-| `halt`      | Termina a execução do programa.                                                                       |
+| Instrução | Descrição                                                                                                            |
+|-----------|----------------------------------------------------------------------------------------------------------------------|
+| `nop`     | "No operation", representa a ausência de uma instrução na pipeline.                                                  |
+| `add`     | Realiza adição: _add rd rs rt_, onde _rd_ é o registrador de destino e _rs_, _rt_ são os operandos.                  |
+| `sub`     | Realiza subtração: _sub rd rs rt_, com a mesma lógica do `add`.                                                      |
+| `mult`    | Realiza multiplicação: _mult rd rs rt_.                                                                              |
+| `div`     | Realiza divisão: _div rd rs rt_.                                                                                     |
+| `addi`    | Realiza adição: _addi rd imm1 imm2_, onde _rd_ é o registrador de destino e _imm1_, _imm2_ são os valores imediatos. |
+| `subi`    | Realiza subtração: _subi rd imm1 imm2_, com a mesma lógica do `add`.                                                 |
+| `multi`   | Realiza multiplicação: _multi rd imm1 imm2_.                                                                         |
+| `divi`    | Realiza divisão: _divi rd imm1 imm2_.                                                                                |
+| `li`      | "Load immediate", carrega uma constante: _li rd imm_, onde _imm_ é carregado no registrador _rd_.                    |
+| `inc`     | Incrementa: _inc rd_, onde _rd_ é o registrador a ser incrementado.                                                  |
+| `dec`     | Decrementa: _dec rd_, onde _rd_ é o registrador a ser decrementado.                                                  |
+| `jump`    | Salta para uma instrução específica: _jump imm_, onde _imm_ indica a linha da próxima instrução.                     |
+| `beq`     | "Branch on equal": _beq rs rt imm_, salta para _imm_ se _rs_ for igual a _rt_.                                       |
+| `bnq`     | "Branch on not equal": _bnq rs rt imm_, salta para _imm_ se _rs_ for diferente de _rt_.                              |
+| `bgez`    | "Branch on greater or equal to zero": _bgez rs imm_, salta para _imm_ se _rs_ >= 0.                                  |
+| `bgtz`    | "Branch on greater than zero": _bgtz rs imm_, salta para _imm_ se _rs_ > 0.                                          |
+| `blez`    | "Branch on less or equal to zero": _blez rs imm_, salta para _imm_ se _rs_ <= 0.                                     |
+| `bltz`    | "Branch on less than zero": _bltz rs imm_, salta para _imm_ se _rs_ < 0.                                             |
+| `lw`      | Lê da memória: _load rd var_, onde _var_ é uma variável e _rd_ é o registrador de destino.                           |
+| `sw`      | Escreve na memória: _store var rs_, onde _var_ é a variável e _rs_ é o registrador de origem.                        |
+| `halt`    | Termina a execução do programa.                                                                                      |
 
 ## Exemplo
 

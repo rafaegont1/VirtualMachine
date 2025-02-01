@@ -48,9 +48,18 @@ void Pipeline::instr_decode()
             cpu.pipeline.id_enc.rt = RegFile::reg_index(code_line[3]);
             break;
 
+        case ISA::Encoding::Opcode::ADDI:
+        case ISA::Encoding::Opcode::SUBI:
+        case ISA::Encoding::Opcode::MULI:
+        case ISA::Encoding::Opcode::DIVI:
+            cpu.pipeline.id_enc.rd = RegFile::reg_index(code_line[1]);
+            cpu.pipeline.id_enc.imm1 = std::stoi(code_line[2]);
+            cpu.pipeline.id_enc.imm2 = std::stoi(code_line[3]);
+            break;
+
         case ISA::Encoding::Opcode::LI:
             cpu.pipeline.id_enc.rd = RegFile::reg_index(code_line[1]);
-            cpu.pipeline.id_enc.imm = std::stoi(code_line[2]);
+            cpu.pipeline.id_enc.imm1 = std::stoi(code_line[2]);
             break;
 
         case ISA::Encoding::Opcode::INC:
@@ -59,14 +68,14 @@ void Pipeline::instr_decode()
             break;
 
         case ISA::Encoding::Opcode::JUMP:
-            cpu.pipeline.id_enc.imm = std::stoi(code_line[1]);
+            cpu.pipeline.id_enc.imm1 = std::stoi(code_line[1]);
             break;
 
         case ISA::Encoding::Opcode::BEQ:
         case ISA::Encoding::Opcode::BNE:
             cpu.pipeline.id_enc.rs = RegFile::reg_index(code_line[1]);
             cpu.pipeline.id_enc.rt = RegFile::reg_index(code_line[2]);
-            cpu.pipeline.id_enc.imm = std::stoi(code_line[3]);
+            cpu.pipeline.id_enc.imm1 = std::stoi(code_line[3]);
             break;
 
         case ISA::Encoding::Opcode::BGEZ:
@@ -74,14 +83,14 @@ void Pipeline::instr_decode()
         case ISA::Encoding::Opcode::BLEZ:
         case ISA::Encoding::Opcode::BLTZ:
             cpu.pipeline.id_enc.rs = RegFile::reg_index(code_line[1]);
-            cpu.pipeline.id_enc.imm = std::stoi(code_line[2]);
+            cpu.pipeline.id_enc.imm1 = std::stoi(code_line[2]);
             break;
 
-        case ISA::Encoding::Opcode::LOAD:
+        case ISA::Encoding::Opcode::LW:
             cpu.pipeline.id_enc.rd = RegFile::reg_index(code_line[1]);
             break;
 
-        case ISA::Encoding::Opcode::STORE:
+        case ISA::Encoding::Opcode::SW:
             cpu.pipeline.id_enc.rs = RegFile::reg_index(code_line[2]);
             break;
 
@@ -125,8 +134,40 @@ void Pipeline::execute()
             cpu.rf.reg(cpu.pipeline.ex_enc.rd, alu_res.as_num);
             break;
 
+        case ISA::Encoding::Opcode::ADDI:
+            alu_res.as_num = HW::CPU::ALU::add(
+                cpu.pipeline.ex_enc.imm1,
+                cpu.pipeline.ex_enc.imm2
+            );
+            cpu.rf.reg(cpu.pipeline.ex_enc.rd, alu_res.as_num);
+            break;
+
+        case ISA::Encoding::Opcode::SUBI:
+            alu_res.as_num = HW::CPU::ALU::sub(
+                cpu.pipeline.ex_enc.imm1,
+                cpu.pipeline.ex_enc.imm2
+            );
+            cpu.rf.reg(cpu.pipeline.ex_enc.rd, alu_res.as_num);
+            break;
+
+        case ISA::Encoding::Opcode::MULI:
+            alu_res.as_num = HW::CPU::ALU::mul(
+                cpu.pipeline.ex_enc.imm1,
+                cpu.pipeline.ex_enc.imm2
+            );
+            cpu.rf.reg(cpu.pipeline.ex_enc.rd, alu_res.as_num);
+            break;
+
+        case ISA::Encoding::Opcode::DIVI:
+            alu_res.as_num = HW::CPU::ALU::div(
+                cpu.pipeline.ex_enc.imm1,
+                cpu.pipeline.ex_enc.imm2
+            );
+            cpu.rf.reg(cpu.pipeline.ex_enc.rd, alu_res.as_num);
+            break;
+
         case ISA::Encoding::Opcode::LI:
-            cpu.rf.reg(cpu.pipeline.ex_enc.rd, cpu.pipeline.ex_enc.imm);
+            cpu.rf.reg(cpu.pipeline.ex_enc.rd, cpu.pipeline.ex_enc.imm1);
             break;
 
         case ISA::Encoding::Opcode::INC:
@@ -140,55 +181,55 @@ void Pipeline::execute()
             break;
 
         case ISA::Encoding::Opcode::JUMP:
-            cpu.pc = HW::CPU::ALU::sub(cpu.pipeline.ex_enc.imm, 1);
+            cpu.pc = HW::CPU::ALU::sub(cpu.pipeline.ex_enc.imm1, 1);
             break;
 
         case ISA::Encoding::Opcode::BEQ:
             alu_res.as_bool = HW::CPU::ALU::eq(rs_data, rt_data);
             if (alu_res.as_bool == true) {
-                cpu.pc = HW::CPU::ALU::sub(cpu.pipeline.ex_enc.imm, 1);
+                cpu.pc = HW::CPU::ALU::sub(cpu.pipeline.ex_enc.imm1, 1);
             }
             break;
 
         case ISA::Encoding::Opcode::BNE:
             alu_res.as_bool = HW::CPU::ALU::ne(rs_data, rt_data);
             if (alu_res.as_bool == true) {
-                cpu.pc = HW::CPU::ALU::sub(cpu.pipeline.ex_enc.imm, 1);
+                cpu.pc = HW::CPU::ALU::sub(cpu.pipeline.ex_enc.imm1, 1);
             }
             break;
 
         case ISA::Encoding::Opcode::BGEZ:
             alu_res.as_bool = HW::CPU::ALU::ge(rs_data, 0);
             if (alu_res.as_bool == true) {
-                cpu.pc = HW::CPU::ALU::sub(cpu.pipeline.ex_enc.imm, 1);
+                cpu.pc = HW::CPU::ALU::sub(cpu.pipeline.ex_enc.imm1, 1);
             }
             break;
 
         case ISA::Encoding::Opcode::BGTZ:
             alu_res.as_bool = HW::CPU::ALU::gt(rs_data, 0);
             if (alu_res.as_bool == true) {
-                cpu.pc = HW::CPU::ALU::sub(cpu.pipeline.ex_enc.imm, 1);
+                cpu.pc = HW::CPU::ALU::sub(cpu.pipeline.ex_enc.imm1, 1);
             }
             break;
 
         case ISA::Encoding::Opcode::BLEZ:
             alu_res.as_bool = HW::CPU::ALU::le(rs_data, 0);
             if (alu_res.as_bool == true) {
-                cpu.pc = HW::CPU::ALU::sub(cpu.pipeline.ex_enc.imm, 1);
+                cpu.pc = HW::CPU::ALU::sub(cpu.pipeline.ex_enc.imm1, 1);
             }
             break;
 
         case ISA::Encoding::Opcode::BLTZ:
             alu_res.as_bool = HW::CPU::ALU::lt(rs_data, 0);
             if (alu_res.as_bool == true) {
-                cpu.pc = HW::CPU::ALU::sub(cpu.pipeline.ex_enc.imm, 1);
+                cpu.pc = HW::CPU::ALU::sub(cpu.pipeline.ex_enc.imm1, 1);
             }
             break;
 
-        case ISA::Encoding::Opcode::LOAD:
+        case ISA::Encoding::Opcode::LW:
             break;
 
-        case ISA::Encoding::Opcode::STORE:
+        case ISA::Encoding::Opcode::SW:
             break;
 
         case ISA::Encoding::Opcode::HALT:
@@ -203,12 +244,12 @@ void Pipeline::mem_access()
     HW::RAM::DataSpace& mem = proc_->mem;
     HW::RAM::DataSpace::Variable var;
 
-    if (cpu.pipeline.mem_enc.opcode == ISA::Encoding::Opcode::LOAD) {
+    if (cpu.pipeline.mem_enc.opcode == ISA::Encoding::Opcode::LW) {
         var.name = code_line[2];
         var.data = mem.read(var.name);
 
         cpu.rf.reg(cpu.pipeline.mem_enc.rd, var.data);
-    } else if (cpu.pipeline.mem_enc.opcode == ISA::Encoding::Opcode::STORE) {
+    } else if (cpu.pipeline.mem_enc.opcode == ISA::Encoding::Opcode::SW) {
         var.name = code_line[1];
         var.data = cpu.rf.reg(cpu.pipeline.mem_enc.rs);
 

@@ -1,4 +1,4 @@
-add   $t3 $t1 $t2
-store A   $t3
-load  $t7 A
+add  $t3 $t1 $t2
+sw   A   $t3
+lw   $t7 A
 halt
