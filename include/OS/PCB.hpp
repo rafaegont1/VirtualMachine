@@ -23,8 +23,11 @@ public:
         TERMINATED
     };
 
-    PCB(const std::string& file_name, PCB::Time timestamp, Time quantum, uint8_t priority = 0);
+    PCB(const std::string& filename, PCB::Time timestamp, Time quantum, uint8_t priority = 0);
+    PCB(const HW::ISA::Code& code, PCB::Time timestamp);
     virtual ~PCB();
+
+    void create_log();
 
     // setters and getters
     uint32_t get_pid() const;
@@ -53,7 +56,7 @@ private:
 
     uint32_t pid_;
     uint16_t priority_;
-    State state_;
+    State state_ = State::NEW;
     HW::ISA::Code code_;
 
     // • Arrival time: the time when a process enters into the ready state and

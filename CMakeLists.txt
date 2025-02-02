@@ -17,7 +17,7 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 # Define PREEMPTIVE as true or false
-option(PREEMPTIVE "Enable preemptive behavior" ON)
+option(PREEMPTIVE "Enable preemptive behavior" OFF)
 
 # Pass the PREEMPTIVE definition to the compiler
 if(PREEMPTIVE)
@@ -39,20 +39,24 @@ add_compile_definitions(${SCHEDULER})
 
 # Set source files
 set(SOURCES
+    src/HW/CPU/ALU.cpp
+    src/HW/CPU/RegFile.cpp
+    src/HW/CPU/Cache.cpp
+    src/HW/CPU/Core.cpp
+    src/HW/CPU/Pipeline.cpp
     src/HW/ISA/Code.cpp
     src/HW/ISA/Encoding.cpp
     src/HW/RAM/Allocator.cpp
     src/HW/RAM/DataSpace.cpp
-    src/HW/CPU/RegFile.cpp
-    src/HW/CPU/ALU.cpp
-    src/HW/CPU/Pipeline.cpp
-    src/HW/CPU/Core.cpp
-    src/HW/CPU/Cache.cpp
-    src/main.cpp
     src/OS/Scheduler/FIFOScheduler.cpp
     src/OS/Scheduler/PriorityQueue.cpp
-    src/OS/Minix.cpp
+    src/OS/Scheduler/SchedulerBase.cpp
     src/OS/PCB.cpp
+    src/OS/Minix.cpp
+    src/main.cpp
+    src/LSH/MinHashSignature.cpp
+    src/LSH/LSH.cpp
+    src/LSH/CharacteristicMatrix.cpp
 )
 
 # Create the executable target

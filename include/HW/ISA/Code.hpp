@@ -13,7 +13,8 @@ public:
 
     static const Line NOP_LINE;
 
-    Code(const std::string& file_name);
+    Code(const std::string& filename);
+    Code(const std::vector<char>& doc);
     const Line& fetch(const uint32_t pc) const;
     uint32_t size() const;
 

@@ -6,18 +6,36 @@ namespace OS {
 
 uint32_t PCB::count_ = 0;
 
-PCB::PCB(const std::string& file_name, PCB::Time timestamp, Time quantum, uint8_t priority)
+PCB::PCB(const std::string& filename, PCB::Time timestamp, Time quantum, uint8_t priority)
 :   pid_{++count_},
     priority_{priority},
-    state_{State::NEW},
-    code_{file_name},
+    code_{filename},
     quantum_{quantum},
     arrival_time_(timestamp)
 {
+    create_log();
+}
+
+PCB::PCB(const HW::ISA::Code& code, PCB::Time timestamp)
+:   pid_{++count_},
+    code_{code},
+    arrival_time_(timestamp)
+{
+    create_log();
+}
+
+PCB::~PCB()
+{
+    if (log.is_open()) {
+        log.close();
+    }
+}
+
+void PCB::create_log()
+{
     const std::string log_name = "pid_" + std::to_string(pid_) + "_output.txt";
 
-    std::cout << "Log for file '" << file_name << "' for process with PID "
-              << pid_ << " will be saved in file: " << log_name << std::endl;
+    std::cout << "Log for file for process with PID " << pid_ << " will be saved in file: " << log_name << std::endl;
 
     log.open(log_name);
     if (!log.is_open()) {
@@ -31,13 +49,6 @@ PCB::PCB(const std::string& file_name, PCB::Time timestamp, Time quantum, uint8_
         << "LOC: "           << code_.size()          << '\n'
         << "Arrival time : " << arrival_time_.count() << " ms\n"
         << "==============================================================\n";
-}
-
-PCB::~PCB()
-{
-    if (log.is_open()) {
-        log.close();
-    }
 }
 
 uint32_t PCB::get_pid() const
@@ -72,6 +83,7 @@ uint8_t PCB::get_priority() const
 
 const HW::ISA::Code::Line& PCB::fetch_line(const uint32_t pc) const
 {
+    // std::cout << "code size: " << code_.size() << std::endl; // rascunho
     return (pc < code_.size()) ? code_.fetch(pc) : HW::ISA::Code::NOP_LINE;
 }
 

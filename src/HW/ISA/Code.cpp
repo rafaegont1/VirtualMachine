@@ -1,5 +1,6 @@
 #include "HW/ISA/Code.hpp"
 
+// #include <iostream> // rascunho
 #include <fstream>
 #include <sstream>
 
@@ -7,13 +8,13 @@ namespace HW::ISA {
 
 const Code::Line Code::NOP_LINE = {"nop"};
 
-Code::Code(const std::string& file_name)
+Code::Code(const std::string& filename)
 {
-    std::ifstream file(file_name);
+    std::ifstream file(filename);
     std::string line;
 
     if (!file.is_open()) {
-        throw std::runtime_error("failed to open file " + file_name);
+        throw std::runtime_error("failed to open file " + filename);
     }
 
     while (std::getline(file, line)) {
@@ -29,6 +30,37 @@ Code::Code(const std::string& file_name)
     }
 
     file.close();
+}
+
+Code::Code(const std::vector<char>& doc)
+{
+    std::vector<std::string> line;
+    std::string word;
+
+    for (char c : doc) {
+        // std::cout << c; // rascunho
+        switch (c) {
+            case ' ':
+                if (!word.empty()) line.push_back(std::move(word));
+                break;
+
+            case '\n':
+                if (!word.empty()) line.push_back(std::move(word));
+                if (!line.empty()) text_.push_back(std::move(line));
+                break;
+
+            default:
+                word.push_back(c);
+                break;
+        }
+    }
+    // std::cout << '\n'; // rascunho
+    // for (const auto& line : text_) { // rascunho
+    //     for (const auto& word : line) { // rascunho
+    //         std::cout << word << ' '; // rascunho
+    //     } // rascunho
+    //     std::cout << '\n'; // rascunho
+    // } // rascunho
 }
 
 const Code::Line& Code::fetch(const uint32_t pc) const

@@ -20,7 +20,7 @@ struct PipelineState {
 struct CPUState {
     RegFile rf;
     PipelineState pipeline;
-    uint32_t pc;
+    uint32_t pc = 0;
 };
 
 }// namespace HW::CPU
