@@ -1,0 +1,5 @@
+li   $t3 100
+addi $t0 50 50
+dec  $t3
+bgtz $t3 2
+halt

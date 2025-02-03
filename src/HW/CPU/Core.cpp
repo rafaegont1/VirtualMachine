@@ -26,7 +26,7 @@ void Core::run_cycle(std::shared_ptr<OS::PCB> proc, Cache& cache, OS::PCB::TimeP
     pipeline_.instr_fetch(cache);
     pipeline_.instr_decode();
     pipeline_.execute(cache);
-    pipeline_.mem_access();
+    pipeline_.mem_access(cache);
     pipeline_.write_back();
 
     // print cycle on log

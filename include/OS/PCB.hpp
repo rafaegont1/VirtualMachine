@@ -23,7 +23,7 @@ public:
         TERMINATED
     };
 
-    PCB(const std::string& filename, PCB::Time timestamp, Time quantum, uint8_t priority = 0);
+    PCB(const std::string& filename, PCB::Time timestamp, Time quantum = std::chrono::milliseconds(0), uint8_t priority = 0);
     PCB(const HW::ISA::Code& code, PCB::Time timestamp);
     virtual ~PCB();
 

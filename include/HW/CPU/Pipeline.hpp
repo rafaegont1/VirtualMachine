@@ -13,7 +13,7 @@ public:
     void instr_fetch(Cache& cache);
     void instr_decode();
     void execute(Cache& cache);
-    void mem_access();
+    void mem_access(Cache& cache);
     void write_back();
 
     // update pipeline instructions

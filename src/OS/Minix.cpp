@@ -38,6 +38,12 @@ void Minix::bootloader(int argc, char** argv)
             std::shared_ptr<OS::PCB> proc = HW::RAM::Allocator::create_process(code, timestamp());
             scheduler_.push(proc);
         }
+    } else {
+        for (int i = 1; i < argc; i++) {
+            const std::string filename = argv[i];
+            std::shared_ptr<OS::PCB> proc = HW::RAM::Allocator::create_process(filename, timestamp());
+            scheduler_.push(proc);
+        }
     }
 // #else
 //     for (int i = 1; i < argc; i++) {

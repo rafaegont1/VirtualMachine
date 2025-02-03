@@ -4,7 +4,7 @@
 #include "HW/ISA/Encoding.hpp"
 #include "HW/RAM/DataSpace.hpp"
 #include <fstream>
-#include <iostream> // rascunho
+// #include <iostream> // rascunho
 
 namespace HW::CPU {
 
@@ -36,10 +36,10 @@ void Pipeline::instr_fetch(Cache& cache)
                         cache.read(code_line[0] + code_line[2] + code_line[3]);
                     break;
 
-                // case ISA::Encoding::Opcode::LI:
-                // case ISA::Encoding::Opcode::LW:
-                //     cache.read(code_line[0] + code_line[2]);
-                //     break;
+                case ISA::Encoding::Opcode::LI:
+                case ISA::Encoding::Opcode::LW:
+                    cache.read(std::to_string(proc_->get_pid()) + code_line[0] + code_line[2]);
+                    break;
 
                 default:
                     break;
@@ -208,6 +208,7 @@ void Pipeline::execute(Cache& cache)
 
         case ISA::Encoding::Opcode::LI:
             cpu.rf.reg(cpu.pipeline.ex_enc.rd, cpu.pipeline.ex_enc.imm1);
+            cache.write(std::to_string(proc_->get_pid()) + code_line[0] + code_line[2], cpu.pipeline.ex_enc.imm1);
             break;
 
         case ISA::Encoding::Opcode::INC:
@@ -277,7 +278,7 @@ void Pipeline::execute(Cache& cache)
     }
 }
 
-void Pipeline::mem_access()
+void Pipeline::mem_access(Cache& cache)
 {
     HW::CPU::CPUState& cpu = proc_->cpu_state;
     auto code_line = cpu.pipeline.mem_enc.code_line.get();
@@ -287,6 +288,7 @@ void Pipeline::mem_access()
     if (cpu.pipeline.mem_enc.opcode == ISA::Encoding::Opcode::LW) {
         var.name = code_line[2];
         var.data = mem.read(var.name);
+        cache.write(std::to_string(proc_->get_pid()) + code_line[0] + code_line[2], var.data);
 
         cpu.rf.reg(cpu.pipeline.mem_enc.rd, var.data);
     } else if (cpu.pipeline.mem_enc.opcode == ISA::Encoding::Opcode::SW) {
