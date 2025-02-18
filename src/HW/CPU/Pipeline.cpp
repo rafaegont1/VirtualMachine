@@ -282,8 +282,8 @@ void Pipeline::mem_access(Cache& cache)
 {
     HW::CPU::CPUState& cpu = proc_->cpu_state;
     auto code_line = cpu.pipeline.mem_enc.code_line.get();
-    HW::RAM::DataSpace& mem = proc_->mem;
-    HW::RAM::DataSpace::Variable var;
+    HW::DataSpace& mem = proc_->mem;
+    HW::DataSpace::Variable var;
 
     if (cpu.pipeline.mem_enc.opcode == ISA::Encoding::Opcode::LW) {
         var.name = code_line[2];

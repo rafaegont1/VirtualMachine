@@ -1,16 +1,15 @@
 #ifndef SCHEDULER_BASE_HPP
 #define SCHEDULER_BASE_HPP
 
-#include <memory>
+#include <bitset>
 #include <mutex>
-#include "OS/PCB.hpp"
 
 namespace OS {
 
 class SchedulerBase {
 public:
-    virtual void push(std::shared_ptr<PCB> proc) = 0;
-    virtual std::shared_ptr<PCB> pop() = 0;
+    virtual void push(std::bitset<32> proc) = 0;
+    virtual std::bitset<32> pop() = 0;
     virtual bool empty() = 0;
 
 protected:

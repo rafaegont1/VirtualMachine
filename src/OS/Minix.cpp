@@ -3,7 +3,8 @@
 #include <iostream>
 #include <memory>
 #include <random>
-#include "HW/RAM/Allocator.hpp"
+#include "OS/MMU.hpp"
+// #include "HW/RAM/Allocator.hpp"
 #include "LSH/LSH.hpp"
 
 namespace OS {
@@ -11,8 +12,8 @@ namespace OS {
 constexpr uint32_t CACHE_SIZE = 5;
 
 Minix::Minix(int argc, char** argv) :
-    timestamp_begin_(std::chrono::high_resolution_clock::now()),
-    cache_(CACHE_SIZE)
+    timestamp_begin_{std::chrono::high_resolution_clock::now()},
+    cache_{CACHE_SIZE}
 {
     bootloader(argc, argv);
 }
@@ -22,6 +23,7 @@ void Minix::bootloader(int argc, char** argv)
 // #if defined(SIMILARITY_SCHEDULING)
     constexpr int k = 5, N = 500;
 
+    // std::cout << "BOOTLOADER" << std::endl; // rascunho
     if (argc > 3) {
         LSH lsh(k, N);
         auto texts_idx = lsh.compute(argc, argv);
@@ -35,14 +37,24 @@ void Minix::bootloader(int argc, char** argv)
 
         for (const auto& idx : texts_idx) {
             const HW::ISA::Code code(texts[idx]);
-            std::shared_ptr<OS::PCB> proc = HW::RAM::Allocator::create_process(code, timestamp());
-            scheduler_.push(proc);
+            // std::shared_ptr<OS::PCB> proc = HW::RAM::Allocator::create_process(code, timestamp());
+            std::shared_ptr<OS::PCB> proc = std::make_shared<OS::PCB>(code, timestamp());
+
+            ram.write(proc);
+            std::bitset<32> virtual_addr(proc->base_addr());
+            // std::cout << "virtual_addr: " << virtual_addr << std::endl; // rascunho
+            scheduler_.push(virtual_addr);
         }
     } else {
         for (int i = 1; i < argc; i++) {
             const std::string filename = argv[i];
-            std::shared_ptr<OS::PCB> proc = HW::RAM::Allocator::create_process(filename, timestamp());
-            scheduler_.push(proc);
+            // std::shared_ptr<OS::PCB> proc = HW::RAM::Allocator::create_process(filename, timestamp());
+            std::shared_ptr<OS::PCB> proc = std::make_shared<OS::PCB>(filename, timestamp());
+
+            ram.write(proc);
+            std::bitset<32> virtual_addr(proc->base_addr());
+            // std::cout << "virtual_addr: " << virtual_addr << std::endl; // rascunho
+            scheduler_.push(virtual_addr);
         }
     }
 // #else
@@ -81,6 +93,7 @@ void Minix::schedule(const uint8_t core_id)
         // Context restore (restore state of process and cpu)
         proc = context_restore();
 
+        std::cout << "TESTANDOOOO" << std::endl; // rascunho
         if (proc == nullptr) break;
 
         // Run process in CPU
@@ -106,7 +119,13 @@ void Minix::schedule(const uint8_t core_id)
 
 std::shared_ptr<OS::PCB> Minix::context_restore()
 {
-    std::shared_ptr<OS::PCB> proc = scheduler_.pop();
+    // std::shared_ptr<OS::PCB> proc = scheduler_.pop();
+    std::bitset<32> virtual_addr = scheduler_.pop();
+    unsigned long physical_addr = OS::MMU::translate(virtual_addr);
+    std::shared_ptr<OS::PCB> proc = ram.read(physical_addr);
+    std::cout << "CONTEXT SWITCH" << std::endl; // rascunho
+    std::cout << "virtual_addr: " << virtual_addr << std::endl; // rascunho
+    std::cout << "physical_addr: " << physical_addr << std::endl; // rascunho
 
     if (proc == nullptr) return nullptr;
 

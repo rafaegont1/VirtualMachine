@@ -31,7 +31,7 @@ void Core::run_cycle(std::shared_ptr<OS::PCB> proc, Cache& cache, OS::PCB::TimeP
 
     // print cycle on log
     const HW::CPU::CPUState& cpu = proc->cpu_state;
-    const HW::RAM::DataSpace& mem = proc->mem;
+    const HW::DataSpace& mem = proc->mem;
 
     cpu.rf.print_log(proc->log);
     pipeline_.print_log(proc->log);

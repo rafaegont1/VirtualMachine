@@ -6,7 +6,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace HW::RAM {
+namespace HW {
 
 class DataSpace {
 public:
@@ -23,6 +23,6 @@ private:
     std::unordered_map<std::string, int32_t> data_;
 };
 
-} // namespace HW::RAM
+} // namespace HW
 
 #endif // DATASPACE_HPP

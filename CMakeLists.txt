@@ -46,13 +46,15 @@ set(SOURCES
     src/HW/CPU/Pipeline.cpp
     src/HW/ISA/Code.cpp
     src/HW/ISA/Encoding.cpp
-    src/HW/RAM/Allocator.cpp
+    # src/HW/RAM/Allocator.cpp
     src/HW/RAM/DataSpace.cpp
+    src/HW/RAM.cpp
     src/OS/Scheduler/FIFOScheduler.cpp
-    src/OS/Scheduler/PriorityQueue.cpp
+    # src/OS/Scheduler/PriorityQueue.cpp
     src/OS/Scheduler/SchedulerBase.cpp
     src/OS/PCB.cpp
     src/OS/Minix.cpp
+    src/OS/MMU.cpp
     src/main.cpp
     src/LSH/MinHashSignature.cpp
     src/LSH/LSH.cpp

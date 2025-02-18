@@ -2,25 +2,21 @@
 
 namespace OS {
 
-void FIFOScheduler::push(std::shared_ptr<OS::PCB> proc)
+void FIFOScheduler::push(std::bitset<32> proc)
 {
     std::lock_guard<std::mutex> guard(mtx_);
 
     queue_.push(proc);
 }
 
-std::shared_ptr<OS::PCB> FIFOScheduler::pop()
+std::bitset<32> FIFOScheduler::pop()
 {
     std::lock_guard<std::mutex> guard(mtx_);
 
-    if (queue_.empty()) {
-        return nullptr;
-    }
-
-    std::shared_ptr<OS::PCB> proc = queue_.front();
+    std::bitset<32> proc_virtual_addr = queue_.front();
     queue_.pop();
 
-    return proc;
+    return proc_virtual_addr;
 }
 
 bool FIFOScheduler::empty()

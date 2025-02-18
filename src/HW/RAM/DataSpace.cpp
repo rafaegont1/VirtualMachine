@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-namespace HW::RAM {
+namespace HW {
 
 void DataSpace::write(const Variable& var)
 {
@@ -33,4 +33,4 @@ void DataSpace::print_log(std::ofstream& log) const
     }
 }
 
-} // namespace HW::RAM
+} // namespace HW

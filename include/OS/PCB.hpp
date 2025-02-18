@@ -36,6 +36,10 @@ public:
     void set_quantum(Time new_value);
     Time get_quantum() const;
     uint8_t get_priority() const;
+    uint32_t base_addr();
+    void base_addr(uint32_t new_value);
+    uint32_t limit_addr();
+    void limit_addr(uint32_t new_value);
 
     OS::PCB::Time get_arrival_time();
     void update_burst_time(OS::PCB::Time cpu_time);
@@ -48,7 +52,7 @@ public:
     const HW::ISA::Code::Line& fetch_line(const uint32_t pc) const;
 
     HW::CPU::CPUState cpu_state;
-    HW::RAM::DataSpace mem;
+    HW::DataSpace mem;
     std::ofstream log;
 
 private:
@@ -76,6 +80,9 @@ private:
     Time response_time_;
     Time burst_time_ = std::chrono::milliseconds(0);
     Time waiting_time_;
+
+    uint32_t base_addr_;
+    uint32_t limit_addr_;
 };
 
 } // namespace OS

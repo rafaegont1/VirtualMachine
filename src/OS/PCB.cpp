@@ -81,6 +81,26 @@ uint8_t PCB::get_priority() const
     return priority_;
 }
 
+uint32_t PCB::base_addr()
+{
+    return base_addr_;
+}
+
+void PCB::base_addr(uint32_t new_value)
+{
+    base_addr_ = new_value;
+}
+
+uint32_t PCB::limit_addr()
+{
+    return limit_addr_;
+}
+
+void PCB::limit_addr(uint32_t new_value)
+{
+    limit_addr_ = new_value;
+}
+
 const HW::ISA::Code::Line& PCB::fetch_line(const uint32_t pc) const
 {
     // std::cout << "code size: " << code_.size() << std::endl; // rascunho
