@@ -27,7 +27,7 @@ public:
     PCB(const HW::ISA::Code& code, PCB::Time timestamp);
     virtual ~PCB();
 
-    void create_log();
+    void create_initial_log();
 
     // setters and getters
     uint32_t get_pid() const;

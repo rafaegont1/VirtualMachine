@@ -1,5 +1,6 @@
 #include "OS/PCB.hpp"
 
+#include <bitset>
 #include <iostream>
 
 namespace OS {
@@ -13,7 +14,6 @@ PCB::PCB(const std::string& filename, PCB::Time timestamp, Time quantum, uint8_t
     quantum_{quantum},
     arrival_time_(timestamp)
 {
-    create_log();
 }
 
 PCB::PCB(const HW::ISA::Code& code, PCB::Time timestamp)
@@ -21,7 +21,6 @@ PCB::PCB(const HW::ISA::Code& code, PCB::Time timestamp)
     code_{code},
     arrival_time_(timestamp)
 {
-    create_log();
 }
 
 PCB::~PCB()
@@ -31,7 +30,7 @@ PCB::~PCB()
     }
 }
 
-void PCB::create_log()
+void PCB::create_initial_log()
 {
     const std::string log_name = "pid_" + std::to_string(pid_) + "_output.txt";
 
@@ -42,12 +41,17 @@ void PCB::create_log()
         throw std::runtime_error("failed to open log file " + log_name);
     }
 
+    uint32_t physical_addr = base_addr_;
+    std::bitset<32> virtual_addr(base_addr_);
+
     log << "--- Process info ---\n"
-        << "PID: "           << pid_                  << '\n'
-        << "Quantum: "       << quantum_.count()      << " ms\n"
-        << "Priority: "      << priority_             << '\n'
-        << "LOC: "           << code_.size()          << '\n'
-        << "Arrival time : " << arrival_time_.count() << " ms\n"
+        << "PID: "               << pid_                  << '\n'
+        << "Physical address: "  << physical_addr         << '\n'
+        << "Virtual address: 0b" << virtual_addr          << '\n'
+        << "Quantum: "           << quantum_.count()      << " ms\n"
+        << "Priority: "          << priority_             << '\n'
+        << "LOC: "               << code_.size()          << '\n'
+        << "Arrival time : "     << arrival_time_.count() << " ms\n"
         << "==============================================================\n";
 }
 

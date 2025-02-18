@@ -23,7 +23,7 @@ void Minix::bootloader(int argc, char** argv)
 // #if defined(SIMILARITY_SCHEDULING)
     constexpr int k = 5, N = 500;
 
-    // std::cout << "BOOTLOADER" << std::endl; // rascunho
+    std::cout << "BOOTLOADER" << std::endl; // rascunho
     if (argc > 3) {
         LSH lsh(k, N);
         auto texts_idx = lsh.compute(argc, argv);
@@ -93,7 +93,7 @@ void Minix::schedule(const uint8_t core_id)
         // Context restore (restore state of process and cpu)
         proc = context_restore();
 
-        std::cout << "TESTANDOOOO" << std::endl; // rascunho
+        // std::cout << "TESTANDOOOO" << std::endl; // rascunho
         if (proc == nullptr) break;
 
         // Run process in CPU
@@ -123,9 +123,9 @@ std::shared_ptr<OS::PCB> Minix::context_restore()
     std::bitset<32> virtual_addr = scheduler_.pop();
     unsigned long physical_addr = OS::MMU::translate(virtual_addr);
     std::shared_ptr<OS::PCB> proc = ram.read(physical_addr);
-    std::cout << "CONTEXT SWITCH" << std::endl; // rascunho
-    std::cout << "virtual_addr: " << virtual_addr << std::endl; // rascunho
-    std::cout << "physical_addr: " << physical_addr << std::endl; // rascunho
+    // std::cout << "CONTEXT SWITCH" << std::endl; // rascunho
+    // std::cout << "virtual_addr: " << virtual_addr << std::endl; // rascunho
+    // std::cout << "physical_addr: " << physical_addr << std::endl; // rascunho
 
     if (proc == nullptr) return nullptr;
 
