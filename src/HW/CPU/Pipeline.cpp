@@ -4,7 +4,6 @@
 #include "HW/ISA/Encoding.hpp"
 #include "HW/RAM/DataSpace.hpp"
 #include <fstream>
-// #include <iostream> // rascunho
 
 namespace HW::CPU {
 
@@ -19,11 +18,6 @@ void Pipeline::instr_fetch(Cache& cache)
         while (true) {
             cpu.pipeline.if_enc.code_line = proc_->fetch_line(cpu.pc++);
             auto code_line = cpu.pipeline.if_enc.code_line.get();
-            // std::cout << "INSTRUCTION\n"; // rascunho
-            // for (const auto& word : code_line) { // rascunho
-            //     std::cout << word << ' '; // rascunho
-            // } // rascunho
-            // std::cout << '\n'; // rascunho
             cpu.pipeline.if_enc.opcode = ISA::Encoding::get_opcode(code_line[0]);
             std::optional<int32_t> cache_value;
 

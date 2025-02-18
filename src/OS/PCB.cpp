@@ -30,7 +30,7 @@ PCB::~PCB()
     }
 }
 
-void PCB::create_initial_log()
+void PCB::init_log()
 {
     const std::string log_name = "pid_" + std::to_string(pid_) + "_output.txt";
 
@@ -107,7 +107,6 @@ void PCB::limit_addr(uint32_t new_value)
 
 const HW::ISA::Code::Line& PCB::fetch_line(const uint32_t pc) const
 {
-    // std::cout << "code size: " << code_.size() << std::endl; // rascunho
     return (pc < code_.size()) ? code_.fetch(pc) : HW::ISA::Code::NOP_LINE;
 }
 

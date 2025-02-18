@@ -46,7 +46,6 @@ set(SOURCES
     src/HW/CPU/Pipeline.cpp
     src/HW/ISA/Code.cpp
     src/HW/ISA/Encoding.cpp
-    # src/HW/RAM/Allocator.cpp
     src/HW/RAM/DataSpace.cpp
     src/HW/RAM.cpp
     src/OS/Scheduler/FIFOScheduler.cpp

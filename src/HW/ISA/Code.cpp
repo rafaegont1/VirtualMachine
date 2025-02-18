@@ -1,6 +1,5 @@
 #include "HW/ISA/Code.hpp"
 
-// #include <iostream> // rascunho
 #include <fstream>
 #include <sstream>
 
@@ -38,7 +37,6 @@ Code::Code(const std::vector<char>& doc)
     std::string word;
 
     for (char c : doc) {
-        // std::cout << c; // rascunho
         switch (c) {
             case ' ':
                 if (!word.empty()) line.push_back(std::move(word));
@@ -54,13 +52,6 @@ Code::Code(const std::vector<char>& doc)
                 break;
         }
     }
-    // std::cout << '\n'; // rascunho
-    // for (const auto& line : text_) { // rascunho
-    //     for (const auto& word : line) { // rascunho
-    //         std::cout << word << ' '; // rascunho
-    //     } // rascunho
-    //     std::cout << '\n'; // rascunho
-    // } // rascunho
 }
 
 const Code::Line& Code::fetch(const uint32_t pc) const

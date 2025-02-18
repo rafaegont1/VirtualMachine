@@ -1,7 +1,6 @@
 #include "LSH/LSH.hpp"
 
 #include <fstream>
-// #include <iostream> // rascunho
 #include <set>
 #include "LSH/CharacteristicMatrix.hpp"
 #include "LSH/MinHashSignature.hpp"
@@ -47,8 +46,6 @@ void LSH::read_documents(char** argv) {
             // }
             // document.push_back(' ');  // Incluir espaço como shingle
         }
-        // for (char c : document) std::cout << c; // rascunho
-        // std::cout << "\n-----\n"; // rascunho
         docs_.push_back(document);
         file.close();
     }
