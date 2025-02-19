@@ -12,14 +12,16 @@ PCB::PCB(const std::string& filename, PCB::Time timestamp, Time quantum, uint8_t
     priority_{priority},
     code_{filename},
     quantum_{quantum},
-    arrival_time_(timestamp)
+    arrival_time_{timestamp}
 {
 }
 
 PCB::PCB(const HW::ISA::Code& code, PCB::Time timestamp)
 :   pid_{++count_},
+    priority_{0},
     code_{code},
-    arrival_time_(timestamp)
+    quantum_{0},
+    arrival_time_{timestamp}
 {
 }
 
