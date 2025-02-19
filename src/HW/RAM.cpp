@@ -18,7 +18,7 @@ void RAM::write(std::shared_ptr<OS::PCB> pcb)
 
     // Set base and limit addresses
     pcb->base_addr(free_addr_);
-    pcb->limit_addr(FRAME_SIZE - 1);
+    pcb->limit_addr(free_addr_ + FRAME_SIZE - 1);
     pcb->init_log();
 
     // Update free address base

@@ -43,17 +43,16 @@ void PCB::init_log()
         throw std::runtime_error("failed to open log file " + log_name);
     }
 
-    uint32_t physical_addr = base_addr_;
     std::bitset<32> virtual_addr(base_addr_);
 
     log << "--- Process info ---\n"
-        << "PID: "               << pid_                  << '\n'
-        << "Physical address: "  << physical_addr         << '\n'
-        << "Virtual address: 0b" << virtual_addr          << '\n'
-        << "Quantum: "           << quantum_.count()      << " ms\n"
-        << "Priority: "          << priority_             << '\n'
-        << "LOC: "               << code_.size()          << '\n'
-        << "Arrival time : "     << arrival_time_.count() << " ms\n"
+        << "PID: "           << pid_                  << '\n'
+        << "Base address: "  << base_addr_            << '\n'
+        << "Limit address: " << limit_addr_           << '\n'
+        << "Quantum: "       << quantum_.count()      << " ms\n"
+        << "Priority: "      << priority_             << '\n'
+        << "LOC: "           << code_.size()          << '\n'
+        << "Arrival time : " << arrival_time_.count() << " ms\n"
         << "==============================================================\n";
 }
 
